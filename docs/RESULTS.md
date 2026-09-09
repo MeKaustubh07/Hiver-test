@@ -50,9 +50,21 @@ Rule-veto policy, chosen after seeing the golden results: unsafe auto-handle 0.1
 | reply system | n | grounded | helpful | tone | safe | overall | pass rate | unsupported-claim rate | pass (gold auto) | pass (gold escalate) |
 |---|---|---|---|---|---|---|---|---|---|---|
 
+### Reply quality, LLM judge = claude-sonnet-5 (before the unusable-link fix (v1))
+
+| reply system | n | grounded | helpful | tone | safe | overall | pass rate | unsupported-claim rate | pass (gold auto) | pass (gold escalate) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| grounded_llm:claude-haiku-4-5-v1 | 242 | 4.12 | 3.60 | 4.17 | 4.64 | 3.65 | 0.67 | 0.19 | 0.60 | 0.78 |
+| nearest_reply | 256 | 3.50 | 3.50 | 4.18 | 4.08 | 3.32 | 0.53 | 0.49 | 0.60 | 0.40 |
+| template | 256 | 3.88 | 3.16 | 3.95 | 4.39 | 3.29 | 0.55 | 0.21 | 0.49 | 0.64 |
+
 ### Golden-set annotator agreement (n=260, 3 annotators, before adjudication)
 
 | | unanimous | pairwise agreement | Fleiss' kappa |
 |---|---|---|---|
 | intent | 93.8% | 95.6% | 0.95 |
 | disposition | 97.3% | 98.2% | 0.96 |
+
+### Fully local comparison (qwen3:1.7b via Ollama, same prompts)
+
+Intent accuracy 0.531 (macro-F1 0.441); triage accuracy 0.766, unsafe auto-handle 0.09, escalation rate 0.54.
