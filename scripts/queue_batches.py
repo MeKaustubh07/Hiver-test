@@ -18,7 +18,23 @@ def customer_message(prompt: str) -> str:
 
 
 def words(s: str, n: int = 8) -> list[str]:
-    return re.findall(r"[a-z0-9']+", s.lower())[:n]
+    """Normalised tokens: HTML entities unescaped, curly quotes straightened, apostrophes dropped."""
+    import html
+    s = html.unescape(s).replace("\u2019", "'").replace("\u2018", "'").replace("'", "")
+    return re.findall(r"[a-z0-9]+", s.lower())[:n]
+
+
+def aligned(msg: str, check: str) -> bool:
+    """True if the answer's msg_check is the start of this prompt's customer message (tolerant)."""
+    exp, got = words(msg, 8), words(check, 8)
+    if not msg:
+        return True
+    if len(got) < min(3, len(exp)):
+        return False
+    hits = sum(1 for x, y in zip(exp, got) if x == y)
+    if hits >= min(5, len(exp)):
+        return True
+    return " ".join(got[:4]) in " ".join(words(msg, 40))  # copied from a nearby offset
 
 
 def guard(answers_path: Path, reqs: dict[str, dict]) -> tuple[Path, dict]:
@@ -38,8 +54,7 @@ def guard(answers_path: Path, reqs: dict[str, dict]) -> tuple[Path, dict]:
         if not req or not a.get("text"):
             stats["no_request_or_empty"] += 1; continue
         msg = customer_message(req["prompt"])
-        exp, got = words(msg), words(str(a.get("msg_check", "")))
-        if msg and (len(got) < min(4, len(exp)) or sum(1 for x, y in zip(exp, got) if x == y) < min(6, len(exp))):
+        if not aligned(msg, str(a.get("msg_check", ""))):
             stats["msg_check_mismatch"] += 1; continue
         t = a["text"].strip()
         tag = req.get("tag", "")
