@@ -91,6 +91,12 @@ def test_ground_check_strips_unknown_urls(tmp_path):
     assert "evil.example" not in reply
     assert stripped == ["https://evil.example/x."]
     assert "https://support.spotify.com/article/b" in reply  # t.co resolved to final
+    # root-only and DM links are never citable, even when present in evidence
+    cat.tco["https://t.co/root"] = "https://open.spotify.com"
+    hits2 = [Hit(2, 1.0, "c", "vote here https://t.co/root and DM https://x.com/messages/compose?id=1", "t", False)]
+    assert cat.annotate(hits2[0].first_reply) == "vote here [link to a page that no longer resolves] and DM [DM link]"
+    r2, s2 = d.ground_check("Vote at https://open.spotify.com or DM https://x.com/messages/compose?id=1", d.allowed_urls(hits2))
+    assert "open.spotify.com" not in r2 and "x.com" not in r2 and len(s2) == 2
 
 
 def test_normalise_greeting():

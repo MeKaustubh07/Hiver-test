@@ -243,9 +243,11 @@ def pending_requests(path: Path = QUEUE_DIR / "pending.jsonl") -> list[dict]:
     return list(seen.values())
 
 
-def ingest_answers(answers_path: Path, backend_label: str, cache_dir: Path = CACHE_DIR) -> int:
-    """Write batch answers ({key, text} per line) into the cache using the queued request metadata."""
-    pending = {r["key"]: r for r in pending_requests()}
+def ingest_answers(answers_path: Path, backend_label: str, cache_dir: Path = CACHE_DIR,
+                   requests: dict[str, dict] | None = None) -> int:
+    """Write batch answers ({key, text} per line) into the cache using the queued request metadata
+    (from pending.jsonl by default, or an explicit {key: request} map, e.g. read from batch files)."""
+    pending = requests if requests is not None else {r["key"]: r for r in pending_requests()}
     n = 0
     for line in answers_path.read_text().splitlines():
         if not line.strip():
@@ -255,6 +257,17 @@ def ingest_answers(answers_path: Path, backend_label: str, cache_dir: Path = CAC
         if req is None or not a.get("text"):
             continue
         write_cache_record(cache_dir, a["key"], backend_label, req["model"], req["system"], req["prompt"],
-                           req["temperature"], req["max_tokens"], req["json_mode"], a["text"], req.get("tag", ""))
+                           req.get("temperature", 0.0), req["max_tokens"], req["json_mode"], a["text"], req.get("tag", ""))
         n += 1
     return n
+
+
+def requests_from_batches(batch_dir: Path, model: str, tag: str = "") -> dict[str, dict]:
+    """Rebuild the request map from batch_*.jsonl files (they carry key/system/prompt/json_mode/max_tokens)."""
+    out: dict[str, dict] = {}
+    for p in sorted(Path(batch_dir).glob("batch_*.jsonl")):
+        for line in p.read_text().splitlines():
+            if line.strip():
+                r = json.loads(line)
+                out[r["key"]] = {**r, "model": model, "temperature": 0.0, "tag": tag}
+    return out

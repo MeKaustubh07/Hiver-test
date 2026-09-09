@@ -67,3 +67,11 @@ Non-obvious decisions, in the order they were made. Each one: what, why, what it
     TF-IDF + logistic regression gets 5-fold out-of-fold predictions on the same 256 examples. That is the
     fair comparison for a "simple" baseline with no other labelled data, but 200 training examples
     understate what the same model would do with a few thousand silver labels.
+17. **Links that no longer resolve are shown to the model as bracketed placeholders, not URLs.** 917 of
+    the brand's 1,009 resolvable 2017 links now redirect to the bare web-player root, and the DM
+    "compose" deep-link is account-specific. In the first full run the drafter copied
+    `https://open.spotify.com` into 22 of 246 replies as if it were the Community idea or the singles
+    link — a grounding failure the URL check could not catch because the URL genuinely appeared in the
+    evidence. Evidence now renders such links as `[link to a page that no longer resolves]` / `[DM link]`
+    and they are never citable. The pre-fix run is kept as `agent_claude-haiku-4-5-v1` for the
+    before/after numbers in the failure analysis.

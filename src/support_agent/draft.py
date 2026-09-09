@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -33,7 +34,10 @@ class Draft:
 
 
 class LinkCatalog:
-    def __init__(self, path: Path = CATALOG_PATH):
+    def __init__(self, path: Path = CATALOG_PATH, use_placeholders: bool | None = None):
+        # SUPPORT_AGENT_LEGACY_LINKS=1 reproduces the pre-fix behaviour (root/DM links shown as URLs) for the
+        # before/after comparison in the failure analysis.
+        self.use_placeholders = (os.getenv("SUPPORT_AGENT_LEGACY_LINKS") != "1") if use_placeholders is None else use_placeholders
         d = json.loads(Path(path).read_text()) if Path(path).exists() else {"citable_pages": [], "tco_to_final": {}}
         self.pages = d["citable_pages"]
         self.tco = d["tco_to_final"]
@@ -44,10 +48,27 @@ class LinkCatalog:
         u = re.sub(r"[.,;:!?)\]…]+$", "", url)
         return self.tco.get(u, u)
 
+    def placeholder(self, url: str) -> str | None:
+        """Links that must never be copied into a reply: DM compose deep-links (account-specific) and
+        2017 links that now redirect to a bare site root (the original target is gone)."""
+        if not self.use_placeholders:
+            return None
+        if re.search(r"^https?://(x\.com|twitter\.com)/messages", url):
+            return "[DM link]"
+        if re.match(r"^https?://[^/]+/?$", url):
+            return "[link to a page that no longer resolves]"
+        if re.match(r"^https?://t\.co/", url):
+            return "[unresolvable t.co link]"
+        return None
+
     def annotate(self, text: str) -> str:
-        """Replace t.co links with '<final url> ("title")' when known, so models see real targets."""
+        """Replace t.co links with '<final url> ("title")' when known, so models see real targets.
+        Unusable targets are shown as bracketed placeholders so they cannot be copied as citations."""
         def sub(m):
             f = self.resolve(m.group(0))
+            ph = self.placeholder(f)
+            if ph:
+                return ph
             t = self.title_of.get(f)
             return f'{f} ("{t}")' if t else f
         return URL_RE.sub(sub, text)
@@ -144,7 +165,9 @@ class GroundedDrafter:
         allowed = set(self.catalog.citable)
         for h in hits[: self.k]:
             for u in URL_RE.findall(h.first_reply):
-                allowed.add(self.catalog.resolve(u))
+                f = self.catalog.resolve(u)
+                if self.catalog.placeholder(f) is None:
+                    allowed.add(f)
         return allowed
 
     def ground_check(self, reply: str, allowed: set[str]) -> tuple[str, list[str]]:

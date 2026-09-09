@@ -6,7 +6,7 @@
 import json, sys
 from pathlib import Path
 sys.path.insert(0, "src")
-from support_agent.llm import ingest_answers, pending_requests
+from support_agent.llm import ingest_answers, pending_requests, requests_from_batches
 
 cmd = sys.argv[1]
 if cmd == "split":
@@ -24,6 +24,8 @@ if cmd == "split":
     json.dump(batches, open(out / "batches.json", "w"))
     print(json.dumps({"pending": len(pend), "batches": len(batches)}))
 elif cmd == "ingest":
+    # ingest <answers_dir> <backend_label> [<batch_dir> <model> [tag]]  (batch_dir: metadata source when the queue was cleared)
     d, label = Path(sys.argv[2]), sys.argv[3]
-    n = sum(ingest_answers(p, label) for p in sorted(d.glob("answers_*.jsonl")))
+    reqs = requests_from_batches(Path(sys.argv[4]), sys.argv[5], sys.argv[6] if len(sys.argv) > 6 else "") if len(sys.argv) > 5 else None
+    n = sum(ingest_answers(p, label, requests=reqs) for p in sorted(d.glob("answers_*.jsonl")))
     print(f"ingested {n} answers from {d}")
