@@ -20,7 +20,7 @@ reproduce:        ## replay cached model outputs -> all metrics in eval/results 
 	uv run support-agent eval-intents --tag $(TAG)
 	uv run support-agent eval-triage --tag $(TAG)
 	LLM_BACKEND=cache-only uv run support-agent judge-replies $(TAG) --judge-model claude-sonnet-5
-	uv run support-agent agreement $(TAG) $(JUDGE_TAG)
+	uv run support-agent agreement $(TAG) $(JUDGE_TAG)   # prints a notice until eval/human/ratings_*.csv is filled in
 	uv run support-agent report
 
 live:             ## same pipeline, live model calls (writes to the cache)

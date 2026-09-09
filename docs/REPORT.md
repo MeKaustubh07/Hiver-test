@@ -6,47 +6,34 @@
 
 **What the agent does.** For each customer's first public tweet to @SpotifyCares it (1) classifies the
 message into one of 10 intents induced from the data, (2) drafts a reply grounded in how SpotifyCares
-actually resolved the most similar past cases, and (3) decides whether the reply can go out
-automatically or a human must take over, with a reason a supervisor would accept.
+actually resolved the most similar past cases, and (3) decides whether the reply can go out automatically
+or a human must take over, with a reason a supervisor would accept.
 
-**Why SpotifyCares.** Chosen on measured evidence, not familiarity (`scripts/profile_brands.py`): 43k brand
-replies, 96% English, only 31% of first replies are "DM us" redirects (Apple 53%, T-Mobile 82%,
-Comcast 72%), and the replies carry real resolutions: help-article links, a troubleshooting ladder,
-consistent policies. Airlines' replies are mostly apologies; Amazon is multilingual and generic. A brand
-whose replies contain nothing but "DM us" gives an agent nothing to ground on.
+**Why SpotifyCares.** Chosen on measured evidence (`scripts/profile_brands.py`): 43k brand replies, 96%
+English, only 31% of first replies are "DM us" redirects (Apple 53%, T-Mobile 82%, Comcast 72%), and the
+replies carry real resolutions — help-article links, a troubleshooting ladder, consistent policies. A brand
+whose replies are all "DM us" gives an agent nothing to ground on; airlines' replies are mostly apologies.
 
-**What "good" means for this brand.** In order of importance:
+**What "good" means here, in order.**
 
-1. **Never auto-handle what needs a human.** On Twitter, "escalate" means a human moves the case to DM
-   to look up the account. Billing, refunds, login failures on all devices, hacked accounts beyond the
+1. **Never auto-handle what needs a human.** On Twitter "escalate" means a human moves the case to DM to
+   look up the account. Billing, refunds, login failures on all devices, hacked accounts beyond the
    self-serve page, safety/legal/PII, and chasing an existing ticket must never get a public bot reply
-   that pretends to resolve them. The metric that matters is the *unsafe auto-handle rate*: the share of
-   should-escalate messages the agent auto-handled. Over-escalation is cheap; under-escalation is a
-   complaint or a churned customer.
-2. **Say only what the brand would say.** Replies must be grounded: no invented URLs, features, dates,
-   refunds or account facts. SpotifyCares never promises content arrival dates, never discusses refunds
-   publicly, never suggests phone support (there is none). A fluent reply that promises a refund is worse
-   than a canned one.
-3. **Sound like SpotifyCares.** Warm, brief, "we'll take a look backstage", one link named in the sentence,
-   under 280 characters. Tone is third because a stiff-but-correct reply is fixable; a wrong one is not.
-4. **Get the intent right** — but intent accuracy is instrumental: it matters only insofar as it changes the
-   reply or the disposition. Two intents that lead to the same action were merged for that reason.
+   that pretends to resolve them. The metric that matters is the *unsafe auto-handle rate*.
+   Over-escalation is cheap; under-escalation is a complaint or a churned customer.
+2. **Say only what the brand would say.** No invented URLs, features, dates, refunds or account facts.
+   SpotifyCares never promises content dates, never discusses refunds publicly, has no phone support.
+3. **Sound like SpotifyCares.** Warm, brief, one link named in the sentence, under 280 characters. Third,
+   because a stiff-but-correct reply is fixable and a wrong one is not.
+4. **Get the intent right** — instrumental only: it matters where it changes the reply or the disposition.
+   Intents that lead to the same action were merged.
 
-**What I chose not to build.**
-
-- *Multi-turn conversation.* The agent handles the first contact only. Mid-thread turns ("it's an iPhone 7
-  on iOS 11") are context for retrieval, not classification targets. The troubleshooting ladder the brand
-  uses is inherently multi-turn; the agent produces rung 1 and hands off.
-- *Live incident awareness.* The brand's outage wording ("little hiccup, all fixed now") is only correct
-  when an incident is confirmed. Without a status feed the agent treats outage-shaped reports as
-  individual problems and never declares anything fixed.
-- *Named-customer greetings and agent sign-offs.* The corpus greets by first name and signs "/XX". Names
-  are anonymised in the dataset and a bot should not pose as a named agent, so replies use "Hey there!"
-  and no sign-off.
-- *Fine-tuning.* 200 labels are far too few, and the point of the exercise is the evaluation, not the model.
-- *Banking77.* It is a different domain (banking intents); using it for intent induction would have
-  imported a taxonomy the data does not support.
-- *A DM-side agent.* Everything after "DM us your email" is invisible in the dataset.
+**Not built, deliberately.** Multi-turn handling (the brand's playbook is a troubleshooting ladder; the
+agent produces rung 1 and hands off). Live incident awareness (outage wording is only correct when an
+incident is confirmed, so the agent never declares anything fixed). Named greetings and agent sign-offs
+(names are anonymised; a bot should not pose as a named agent). Fine-tuning (200 labels; the point is
+the evaluation). Banking77 (a different domain; it would import intents the data does not support). A
+DM-side agent (everything after "DM us your email" is invisible in the dataset).
 
 ## 2. System
 
@@ -72,29 +59,27 @@ customer tweet ──▶ retrieve k=5 similar past cases (BM25 + MiniLM, RRF) �
 
 ## 3. How it was evaluated
 
-**Golden set** (`eval/golden/`): 260 first-contact messages, 256 scoreable. Sampled as 150 uniform
-(month-stratified) + 70 keyword-targeted for rare intents + 40 hard cases (very short, multi-question,
-angry, media-only). Every candidate id is excluded from the retrieval index. Each message was labelled
-independently three times from a written annotator guide, adjudicated against the guide, and the
-disagreements queued for human review (`review_queue.csv`). Agreement before adjudication: Fleiss'
-kappa 0.95 (intent), 0.96 (disposition). The disposition label follows the written policy, not what the
-2017 agent happened to do.
+**Golden set** (`eval/golden/`): 260 first-contact messages, 256 scoreable — 150 uniform (month-
+stratified) + 70 keyword-targeted for rare intents + 40 hard cases (very short, multi-question, angry,
+media-only). Every candidate id is excluded from the retrieval index. Each message was labelled three times
+independently from a written annotator guide, adjudicated against the guide, and disagreements queued for
+human review (`review_queue.csv`). Agreement before adjudication: Fleiss' kappa 0.95 (intent), 0.96
+(disposition). The disposition label follows the written policy, not what the 2017 agent happened to do.
 
-**Baselines.** For every task, one trivial and at least one simple baseline:
+**Baselines**, one trivial and at least one simple per task:
 
 | task | trivial | simple | data-driven |
 |---|---|---|---|
-| intent | majority class | hand-written keyword rules; TF-IDF + logistic regression (5-fold out-of-fold on the golden set) | — |
-| triage | always escalate | rule policy on the gold intent; rule policy on the predicted intent | k-NN vote on whether the brand moved the 5 nearest past cases to DM |
+| intent | majority class | keyword rules; TF-IDF + logistic regression (5-fold out-of-fold on the golden set) | — |
+| triage | always escalate | rule policy on the gold intent; on the predicted intent | k-NN vote on whether the brand moved the 5 nearest past cases to DM |
 | reply | canned template per intent | copy the brand's reply to the nearest past message | — |
 
-**Metrics.** Accuracy and macro-F1 with percentile-bootstrap 95% CIs over examples; for triage, precision/
-recall on `escalate` plus the **unsafe auto-handle rate** (share of should-escalate cases the system
-auto-handled). Replies are scored by an LLM judge (Claude Sonnet 5, a different and stronger model than
-the Haiku drafter) on a 1-5 rubric — grounded, helpful, tone, safe, overall — plus a binary
-"would a supervisor let this go out unedited" pass. The judge sees the same evidence pack the drafter
-could use and never sees which system wrote the reply. Judge validity is measured against blind human
-ratings on the same rubric (Section 4.4).
+**Metrics.** Accuracy and macro-F1 with percentile-bootstrap 95% CIs; for triage, precision/recall on
+`escalate` plus the **unsafe auto-handle rate** (share of should-escalate cases auto-handled). Replies are
+scored by an LLM judge (Claude Sonnet 5 — a different, stronger model than the Haiku drafter) on a 1-5
+rubric (grounded, helpful, tone, safe, overall) plus a binary "would a supervisor send this unedited"
+pass. The judge sees the same evidence pack the drafter could use and never sees which system wrote the
+reply; judge validity is measured against blind human ratings on the same rubric (4.4).
 
 ## 4. Results
 
@@ -200,69 +185,55 @@ _(filled from the verified failure-analysis run — see below)_
 
 ## 6. What is misleading about my headline number
 
-The headline is "0.79 intent accuracy, 0.07 unsafe auto-handle rate, 0.67 judge pass rate". Every one
-of those numbers is softer than it looks.
+Headline: "0.79 intent accuracy, 0.07 unsafe auto-handle rate, 0.67 judge pass rate". Each is softer than
+it looks.
 
-1. **The golden set is not the traffic.** 110 of 256 examples were oversampled by keyword or picked
-   because they were hard. On the 146 random examples the intent accuracy is 0.788 — about the same —
-   but the *class mix* is different, and per-class numbers on 9-12 examples (artist, other, support
-   follow-up) have confidence intervals wider than the differences between systems.
-2. **n = 256 buys wide intervals.** Intent accuracy 95% CI is [0.74, 0.84]; the unsafe auto-handle rate
-   of 0.07 is 7 cases out of 97. One more missed hijack moves it to 0.08. Do not read a second decimal.
-3. **The triage policy was chosen on the test set.** The rule-veto layer was adopted because it cut the
-   unsafe rate from 0.16 to 0.07 *on these 256 examples*. Split-half checks say the gain is real (mean
-   reduction 0.095 on held-out halves, 5th percentile 0.044), but the true rate is more likely near the
-   LLM-only-to-veto midpoint than at 0.07. The unusable-link fix was likewise made after inspecting
-   outputs; its before/after is reported so the reader can discount it.
-4. **"Unsafe auto-handle" assumes the labels are right, and the labels were written by a model.** Three
-   Claude annotators agreeing at kappa 0.95 proves the guide is unambiguous to Claude, not that a Spotify
-   supervisor would draw the same lines. The Hulu-bundle and "all my songs taken off" cases in Section 4.2
-   are examples where a human might reasonably flip the gold label — and flipping two of them changes the
-   unsafe rate by ±0.02. Until the review queue is worked through by a human, "hand-labelled" means
+1. **The golden set is not the traffic.** 110 of 256 examples were oversampled by keyword or picked for
+   being hard. Intent accuracy on the 146 random examples is 0.788 — similar — but the class mix differs,
+   and per-class numbers on 9-12 examples (artist, other, support follow-up) have intervals wider than the
+   gaps between systems.
+2. **n = 256 buys wide intervals.** Intent accuracy CI [0.74, 0.84]; the unsafe rate of 0.07 is 7 cases
+   of 97 — one more missed hijack makes it 0.08. Do not read a second decimal.
+3. **The triage policy was chosen on the test set.** The rule veto was adopted because it cut the unsafe
+   rate from 0.16 to 0.07 *on these examples*. Split-half checks say the gain is real (mean reduction 0.095
+   on held-out halves, 5th percentile 0.044), but the true rate is likelier somewhere between the two.
+   The unusable-link fix was also made after inspecting outputs; its before/after is reported.
+4. **"Unsafe" assumes the labels are right, and a model wrote them.** Three Claude annotators at kappa
+   0.95 proves the guide is unambiguous to Claude, not that a Spotify supervisor draws the same lines. Two
+   of the seven unsafe cases (Hulu bundle, "all my songs taken off") are ones a human might flip; that
+   alone moves the rate by ±0.02. Until the review queue is worked by a human, "hand-labelled" means
    "hand-checkable".
-5. **The judge pass rate is a judge's opinion.** Section 4.4: no human agreement number exists yet, the
-   judge and the drafter are the same model family (Sonnet judging Haiku), and LLM judges are known to
-   reward confident, well-formatted text. The 0.67 should be read as an upper bound; the *ranking*
-   (grounded > template > nearest) and the *split* (0.81 when escalating vs 0.55 when self-serving) are
-   more trustworthy than the level, because they survive any monotone recalibration of the judge.
-6. **0.67 is an average over two very different jobs.** Nearly half the "passes" are DM-ask replies — the
-   easiest thing the agent does. The number a support lead cares about, "how often does the bot resolve a
-   self-serve case acceptably", is 0.55, and for content-availability and app issues it is about 0.5.
-7. **First turn only.** The brand's own playbook is a 4-rung troubleshooting ladder; the agent is scored on
-   rung 1. A reply that correctly asks "what device?" passes, whether or not the conversation would have
-   ended well.
-8. **The evidence is from 2017 and the world moved.** 917 of 1,009 brand links now dead-end; Reputation
-   is streamable; NUS/UNiDAYS rules changed. The agent is grounded in what SpotifyCares said in 2017, and
-   the judge grades against the same corpus, so "grounded" means "consistent with the 2017 brand", not
-   "true today".
-9. **The model calls were not made through the production API.** Prompts were answered by Claude models
-   via a batch harness (README). Same prompts and parsing, but temperature, system-prompt wrapping and
-   model snapshot may differ from an API run; a live re-run will not reproduce the cached numbers exactly.
-10. **Baselines are handicapped in a specific way.** TF-IDF + LR was trained on ~200 examples by
-    cross-validation; with a few thousand silver labels it would plausibly close half the gap to the LLM at
-    zero marginal cost. "LLM beats TF-IDF by 25 points" is true here and not a statement about the ceiling
-    of cheap classifiers.
-11. **Four unlabelable rows were dropped, and "other" is a bin.** Spam and non-English messages were
-    excluded from scoring; live traffic contains them. The `other` class (F1 0.43) absorbs whatever the
-    taxonomy cannot place; its errors are partly the taxonomy's.
+5. **The judge pass rate is a judge's opinion.** No human agreement number exists yet (4.4); judge and
+   drafter share a model family; LLM judges reward confident, well-formatted text. Read 0.67 as an upper
+   bound. The *ranking* (grounded > template > nearest) and the *split* (0.81 when escalating vs 0.55 when
+   self-serving) are more trustworthy than the level: they survive any monotone recalibration.
+6. **0.67 averages two different jobs.** Nearly half the passes are DM-ask replies, the easiest thing the
+   agent does. The number a support lead wants — how often the bot resolves a self-serve case acceptably —
+   is 0.55, and about 0.5 for content and app issues.
+7. **First turn only.** A reply that correctly asks "what device?" passes whether or not the conversation
+   would have ended well.
+8. **The evidence is from 2017.** 917 of 1,009 brand links now dead-end; Reputation is streamable;
+   student-discount rules changed. "Grounded" means "consistent with the 2017 brand", not "true today".
+9. **Calls did not go through the production API.** Prompts were answered by Claude models via a batch
+   harness (README); a live re-run will not reproduce the cached numbers exactly.
+10. **The simple baseline is data-starved.** TF-IDF + LR trained on ~200 examples; with a few thousand
+    silver labels it would plausibly close half the gap at zero marginal cost.
+11. **Four unlabelable rows were dropped and `other` is a bin.** Spam and non-English were excluded from
+    scoring but exist in traffic; `other` (F1 0.43) absorbs what the taxonomy cannot place.
 
 ## 7. What I would do with one more week
 
-1. **Fix the two label seams instead of the model.** Merge `other`'s "vague plea" bucket with a real
-   *clarify* action, and split how-to from billing by a single question ("has money moved or an attempt
-   failed?") in the prompt — the confusion matrix says these two seams cost more accuracy than any model
-   change would.
-2. **Silver-label 3,000 messages** with the LLM classifier, train the TF-IDF/LR (or a small encoder) on
-   them, and use it as a cheap first pass with the LLM only on low-margin cases. The 5-fold baseline here
-   is starved of data (200 examples); the interesting question is whether a $0 model gets to 0.75.
-3. **Human ratings at scale.** 60 blind ratings bound the judge; 300 with two raters would let me report
-   inter-human agreement next to judge-human agreement, which is the number that actually validates the
-   rubric.
-4. **Evaluate the conversation, not the first turn.** The brand's playbook is a troubleshooting ladder;
-   a simulated-customer harness (the thread's later customer turns as the script) would measure whether
-   the agent reaches resolution in ≤3 turns and escalates at the right rung.
-5. **Retire time-bound facts.** Build the "registry" the policy assumes (current help-article URLs, live
-   incident feed, active promos) so replies stop depending on what was true in November 2017, and add a
-   check that flags any reply citing a date-bound template (Reputation, NUS, 10k library limit).
+1. **Fix the two label seams, not the model.** Give `other`'s "vague plea" bucket a real *clarify*
+   action, and split how-to from billing with one question in the prompt ("has money moved or an attempt
+   failed?"). The confusion matrix says these seams cost more than any model change.
+2. **Silver-label 3,000 messages** with the LLM classifier, train TF-IDF/LR or a small encoder on them,
+   and use it as a cheap first pass with the LLM only on low-margin cases. Does a $0 model reach 0.75?
+3. **Human ratings at scale.** 60 blind ratings bound the judge; 300 with two raters would put
+   inter-human agreement next to judge-human agreement — the number that validates the rubric.
+4. **Evaluate the conversation.** Replay each thread's later customer turns as a scripted customer and
+   measure resolution within 3 turns and escalation at the right rung.
+5. **Retire time-bound facts.** Build the registry the policy assumes (current help URLs, incident feed,
+   active promos) and flag any reply that cites a date-bound template.
 6. **Regex hygiene from the failure dump**: "still waiting for <album>" is not a support chase;
-   "changed password" without "my" is a steps-tried signal.
+   "changed password" without "my" is a steps-tried signal; a name in evidence is never the customer's.
+

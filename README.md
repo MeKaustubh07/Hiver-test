@@ -33,10 +33,10 @@ Requirements: Python 3.12+, [`uv`](https://docs.astral.sh/uv/), ~1 GB disk. No K
 ```bash
 make setup        # uv sync + download twcs.csv (~170 MB zip)
 make data         # reconstruct SpotifyCares threads (~2 min)
-make reproduce    # replay the recorded model outputs -> all metrics printed + eval/results/*.json
+make reproduce    # replay the recorded model outputs -> all metrics printed + eval/results/*.json (~2 min)
 ```
 
-`make reproduce` uses `LLM_BACKEND=cache-only`: every model call in the pipeline is cached by a content
+`make reproduce` takes about 2 minutes on a laptop (measured: 1 min 36 s on an 8 GB M2) and uses `LLM_BACKEND=cache-only`: every model call in the pipeline is cached by a content
 hash of (model, system prompt, prompt, params) under `data/cache/llm/`, and the cache is committed. The
 numbers you get are exactly the numbers in the report, and you can read every prompt and every raw
 model answer in the cache.

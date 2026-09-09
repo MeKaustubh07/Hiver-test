@@ -161,7 +161,8 @@ def agreement(tag: str, judge_tag: str, ratings: Path = None):
     h = pd.read_csv(ratings).merge(key, on=["rating_id", "example_id"])
     h = h[h.overall.notna() & (h.overall.astype(str).str.strip() != "")]
     if h.empty:
-        rprint("[red]no human ratings filled in yet[/red]"); raise typer.Exit(1)
+        rprint("[yellow]no human ratings filled in yet — fill eval/human/ratings_<tag>.csv (see eval/human/README.md) and re-run[/yellow]")
+        return
     d = json.loads(Path(f"eval/results/judged_{tag}_by_{judge_tag}.json").read_text())
     jmap = {(r["example_id"], r["system"]): r["judge"] for r in d["rows"] if r["judge"]}
     human, judge = [], []
