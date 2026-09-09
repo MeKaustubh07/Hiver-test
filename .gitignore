@@ -1,0 +1,21 @@
+# data
+data/raw/
+data/processed/*.parquet
+data/processed/*.csv
+!data/processed/.gitkeep
+# model caches: keep the LLM response cache (needed for offline reproduction), drop embeddings + queue
+data/cache/*
+!data/cache/llm/
+data/cache/queue/
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+# secrets
+.env
+# os
+.DS_Store
+# model weights
+models/
