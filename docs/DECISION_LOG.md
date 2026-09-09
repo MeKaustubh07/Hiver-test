@@ -75,3 +75,20 @@ Non-obvious decisions, in the order they were made. Each one: what, why, what it
     evidence. Evidence now renders such links as `[link to a page that no longer resolves]` / `[DM link]`
     and they are never citable. The pre-fix run is kept as `agent_claude-haiku-4-5-v1` for the
     before/after numbers in the failure analysis.
+18. **Judge is a different, stronger model than the drafter, and sees the evidence, not the system
+    name.** Claude Sonnet 5 judges replies drafted by Claude Haiku 4.5, with the same retrieved
+    evidence pack the drafter could use plus the hard policies and the citable-page list. Same-model
+    judging inflates scores (self-preference); a judge without the evidence cannot score groundedness
+    and just rewards fluency. The nearest-reply baseline drops from 3.32 to 3.05 overall once the judge
+    sees dead 2017 links as placeholders — the judge is doing what it should.
+19. **Two judged runs are kept on purpose: v1 (before the unusable-link fix) and final.** Overall
+    3.67 → 3.72, unsupported-claim rate 0.18 → 0.14 for the grounded drafter. The delta is small because
+    the judge had already been penalising the copied root URLs; the fix mostly removed a class of
+    failure rather than moving the mean.
+20. **Model calls went through a batch queue answered by Claude Code subagents, and the README says so
+    up front.** No API key was available. The pipeline's prompts, parsing and post-processing are
+    identical to the API path; only the transport differs, and every cache record is labelled
+    `claude-code-batch`. A reviewer can replay everything offline or re-run live with a key.
+21. **Human ratings are the user's job, not mine.** The rating sheet is blind and shuffled with the
+    key file separate, and the agreement command refuses to run on an empty sheet. Filling it with
+    model-generated "human" ratings would make the judge-validation number meaningless.

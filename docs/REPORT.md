@@ -150,13 +150,101 @@ Of the 27 over-escalations, 23 come from the LLM layer invoking "account-scoped"
 liberally on app issues and policy questions, 3 from the veto (predicted billing on a how-to question),
 and 1 from a hard rule: "Still waiting for Reputation to drop 😭" matched the *chasing support* regex.
 
-### 4.3 Reply quality
+### 4.3 Reply quality (judge: Claude Sonnet 5, n = 256 per system)
 
-_(see Section 4.3 in the final version — filled from `judged_*.json` once the judge passes complete)_
+| reply system | grounded | helpful | tone | safe | overall | pass | unsupported-claim rate |
+|---|---|---|---|---|---|---|---|
+| canned template per intent | 3.80 | 3.20 | 3.96 | 4.33 | 3.26 | 0.53 | 0.24 |
+| copy nearest historical reply | 3.07 | 3.41 | 4.11 | 3.91 | 3.05 | 0.40 | 0.59 |
+| **grounded LLM drafter** | **4.10** | **3.66** | **4.16** | **4.66** | **3.72** | **0.67** | **0.14** |
+
+The grounded drafter beats both baselines on every criterion, but the pass rate hides a split that matters
+more than the mean. Where the agent decided to *escalate*, its reply — an on-brand "can you DM us your
+account email" with the right framing — passes 81% of the time (overall 4.26). Where it decided to
+*auto-handle*, i.e. where it actually has to resolve something, it passes 55% (overall 3.27, helpful 3.14).
+Per intent: billing 0.97 and account access 0.86 (both "DM us" intents), but content availability 0.52,
+feature feedback 0.55, app/playback 0.51, artist 0.44. The template baseline *beats* the drafter on
+app/playback (0.77 vs 0.51) and artist (0.67 vs 0.44): the brand's canonical "what device, OS and Spotify
+version?" ask, copied verbatim, is judged more acceptable than the drafter's paraphrases, which the judge
+penalises for presuming a fault ("that doesn't sound right") or skipping the diagnostic ask.
+
+The single worst behaviour is a degenerate generic reply — "Hey! We appreciate you reaching out. Thanks
+for the feedback!" or a close variant — produced 12 times, passing 25% of the time,
+12 of them on messages the agent had decided to auto-handle: a customer asking how to switch to
+Family plan, or why a named track vanished, gets a thank-you. Other low scorers: a device/OS ask sent to a
+customer asking a hypothetical about Facebook deactivation; a listener's playful play-count request sent to
+Spotify for Artists; a customer name lifted from an evidence case. Of 256 grounded replies the judge scored
+58 at helpful ≤ 2, 38 at grounded ≤ 2 and 21 at safe ≤ 3.
+
+Before the unusable-link fix (Section 5, mode 2) the same drafter scored 3.67 overall, pass 0.67,
+unsupported-claim rate 0.18; the judge had already been penalising the copied dead URLs, so the fix removed
+a failure class more than it moved the mean. The nearest-reply baseline's unsupported rate of 0.59 is
+mostly its verbatim 2017 links and names.
 
 ### 4.4 Does the judge agree with a human?
 
-_(filled from `agreement_*.json` once the blind rating sheet is completed)_
+The validation set is a blind, shuffled sheet of 60 replies (20 per system, system hidden in a separate
+key file) with the judge's exact rubric (`eval/human/README.md`). `support-agent agreement` computes
+quadratic-weighted Cohen's kappa, Spearman and exact / within-1 agreement on `overall`, and kappa on
+pass/fail, and refuses to run on an empty sheet. **At the time of writing the sheet has not yet been
+rated by a human**, so no agreement number is claimed here; the table in `docs/RESULTS.md` fills in
+automatically once it is. What can be said now: the judge is a different and stronger model than the
+drafter; it sees the evidence rather than only the reply, so its groundedness score is checkable (every
+"unsupported claim" it lists is quoted in `judged_*.json`); and its ranking of the three systems is the
+one a reader of the failure dump would give. What cannot be said without the ratings is whether its 1-5
+scale means the same thing as a human's — the pass rates in 4.3 should be read as *judge* pass rates.
+
+## 5. Failure analysis: top 5 failure modes
+
+_(filled from the verified failure-analysis run — see below)_
+
+## 6. What is misleading about my headline number
+
+The headline is "0.79 intent accuracy, 0.07 unsafe auto-handle rate, 0.67 judge pass rate". Every one
+of those numbers is softer than it looks.
+
+1. **The golden set is not the traffic.** 110 of 256 examples were oversampled by keyword or picked
+   because they were hard. On the 146 random examples the intent accuracy is 0.788 — about the same —
+   but the *class mix* is different, and per-class numbers on 9-12 examples (artist, other, support
+   follow-up) have confidence intervals wider than the differences between systems.
+2. **n = 256 buys wide intervals.** Intent accuracy 95% CI is [0.74, 0.84]; the unsafe auto-handle rate
+   of 0.07 is 7 cases out of 97. One more missed hijack moves it to 0.08. Do not read a second decimal.
+3. **The triage policy was chosen on the test set.** The rule-veto layer was adopted because it cut the
+   unsafe rate from 0.16 to 0.07 *on these 256 examples*. Split-half checks say the gain is real (mean
+   reduction 0.095 on held-out halves, 5th percentile 0.044), but the true rate is more likely near the
+   LLM-only-to-veto midpoint than at 0.07. The unusable-link fix was likewise made after inspecting
+   outputs; its before/after is reported so the reader can discount it.
+4. **"Unsafe auto-handle" assumes the labels are right, and the labels were written by a model.** Three
+   Claude annotators agreeing at kappa 0.95 proves the guide is unambiguous to Claude, not that a Spotify
+   supervisor would draw the same lines. The Hulu-bundle and "all my songs taken off" cases in Section 4.2
+   are examples where a human might reasonably flip the gold label — and flipping two of them changes the
+   unsafe rate by ±0.02. Until the review queue is worked through by a human, "hand-labelled" means
+   "hand-checkable".
+5. **The judge pass rate is a judge's opinion.** Section 4.4: no human agreement number exists yet, the
+   judge and the drafter are the same model family (Sonnet judging Haiku), and LLM judges are known to
+   reward confident, well-formatted text. The 0.67 should be read as an upper bound; the *ranking*
+   (grounded > template > nearest) and the *split* (0.81 when escalating vs 0.55 when self-serving) are
+   more trustworthy than the level, because they survive any monotone recalibration of the judge.
+6. **0.67 is an average over two very different jobs.** Nearly half the "passes" are DM-ask replies — the
+   easiest thing the agent does. The number a support lead cares about, "how often does the bot resolve a
+   self-serve case acceptably", is 0.55, and for content-availability and app issues it is about 0.5.
+7. **First turn only.** The brand's own playbook is a 4-rung troubleshooting ladder; the agent is scored on
+   rung 1. A reply that correctly asks "what device?" passes, whether or not the conversation would have
+   ended well.
+8. **The evidence is from 2017 and the world moved.** 917 of 1,009 brand links now dead-end; Reputation
+   is streamable; NUS/UNiDAYS rules changed. The agent is grounded in what SpotifyCares said in 2017, and
+   the judge grades against the same corpus, so "grounded" means "consistent with the 2017 brand", not
+   "true today".
+9. **The model calls were not made through the production API.** Prompts were answered by Claude models
+   via a batch harness (README). Same prompts and parsing, but temperature, system-prompt wrapping and
+   model snapshot may differ from an API run; a live re-run will not reproduce the cached numbers exactly.
+10. **Baselines are handicapped in a specific way.** TF-IDF + LR was trained on ~200 examples by
+    cross-validation; with a few thousand silver labels it would plausibly close half the gap to the LLM at
+    zero marginal cost. "LLM beats TF-IDF by 25 points" is true here and not a statement about the ceiling
+    of cheap classifiers.
+11. **Four unlabelable rows were dropped, and "other" is a bin.** Spam and non-English messages were
+    excluded from scoring; live traffic contains them. The `other` class (F1 0.43) absorbs whatever the
+    taxonomy cannot place; its errors are partly the taxonomy's.
 
 ## 7. What I would do with one more week
 

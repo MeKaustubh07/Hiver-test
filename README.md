@@ -11,7 +11,19 @@ LLM judge with measured human agreement, two baselines per task, and a failure a
 
 ## Headline results
 
-_(filled in from `eval/results/` — see the report for the full tables, confidence intervals and caveats)_
+Golden set of 256 scoreable first-contact messages (3 annotators, Fleiss' kappa 0.95). Agent = Claude
+Haiku 4.5 for classify / triage / draft; judge = Claude Sonnet 5. Full tables with confidence intervals
+in [`docs/RESULTS.md`](docs/RESULTS.md); what these numbers do *not* mean in the report's Section 6.
+
+| task | trivial baseline | simple baseline | **agent** |
+|---|---|---|---|
+| intent accuracy (10 classes) | majority 0.17 | TF-IDF+LR 0.54 · keyword rules 0.45 | **0.79** [0.74, 0.84] · macro-F1 0.76 |
+| **unsafe auto-handle rate** (should-escalate cases the system auto-handled; lower is better) | always-escalate 0.00 (escalates everything) | rules on predicted intent 0.28 · k-NN on historical DM 0.18 | **0.07** (escalate recall 0.93, escalation rate 0.46 vs gold 0.38) |
+| reply quality, judge overall 1-5 / pass rate | canned template 3.26 / 0.53 | copy nearest historical reply 3.05 / 0.40 | **3.72 / 0.67** (unsupported-claim rate 0.14) |
+| fully local `qwen3:1.7b` | | | intent 0.53 · unsafe auto 0.09 · escalation rate 0.54 |
+
+Judge-vs-human agreement: the blind 60-reply rating sheet is in `eval/human/`; the agreement table in
+the report is filled from it (`support-agent agreement`).
 
 ## Reproduce in under 15 minutes
 
