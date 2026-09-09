@@ -1,0 +1,101 @@
+{
+ "low_confidence_threshold": 0.55,
+ "rules": [
+  {
+   "name": "pii_public",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "[\\w.+-]+@[\\w-]+\\.[a-z]{2,}|\\b\\+?\\d{1,3}[\\s.-]?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\\b|\\b(card number|cvv|my password is|password:)",
+   "reason": "customer posted personal details publicly ({match}); ask them to delete the tweet and move to DM"
+  },
+  {
+   "name": "safety",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(kill myself|suicid\\w*|self[- ]harm|end my life|want to die|hurt (myself|someone)|shoot (you|them|up)|bomb|passed away|deceased|died|late (husband|wife|mother|father|mom|dad|son|daughter|brother|sister))\\b",
+   "reason": "safety-sensitive content ({match}); human judgement required"
+  },
+  {
+   "name": "legal_press",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(lawyer|attorney|lawsuit|sue (you|spotify)|suing|legal action|small claims|regulator|ombudsman|trading standards|FTC|BBB|journalist|reporter|press (inquiry|enquiry)|police|law enforcement|subpoena)\\b",
+   "reason": "legal/press/law-enforcement signal ({match}); support does not answer these publicly"
+  },
+  {
+   "name": "data_privacy_deletion",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(GDPR|data (request|export|protection)|all (the )?(data|datas|information) you have|(delete|close|remove|deactivate|terminate) my account|permanently delete)\\b",
+   "reason": "data-privacy or account-deletion request ({match}); requires identity verification and a human process"
+  },
+  {
+   "name": "breach_phishing",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(data breach|breach(ed)?|phishing|phish|scam (email|link)|is this (email )?(legit|real|genuine))\\b",
+   "reason": "possible security incident or phishing check ({match}); never speculate publicly"
+  },
+  {
+   "name": "money_moved",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(charged|charge me|charging me|double[- ]?charg\\w*|refund\\w*|money back|took (my )?(money|\\$|\u00a3|\u20ac)|billed|payment (failed|declined|error|didn'?t)|still (says |on )?(a )?free|cancel(led|ed)? (my )?(premium|subscription|plan) (but|and)|(want|need) to cancel|receipt|transaction)\\b",
+   "reason": "money or paid-plan state is involved ({match}); requires a payment-history lookup and refunds are never promised publicly"
+  },
+  {
+   "name": "chase_or_channel",
+   "hard": true,
+   "disposition": "escalate",
+   "pattern": "\\b(no ?one (is |has )?(respond\\w*|answer\\w*|repl\\w*|help\\w*)|still waiting|been waiting|(sent|send|wrote) (you |u )?(a |an |several |\\d+ )?(dm|dms|email|emails|message|messages)|check (your|ur|the) dms?|answer (my|the|ur|your) dms?|(phone|telephone) (number|support|line)|call (you|someone|spotify)|(speak|talk) (to|with) (a |an |someone|somebody|human|person|real)|contact me|get (back|in touch) (to|with) me)\\b",
+   "reason": "customer is chasing support or asking for a channel ({match}); a human must be in the DM thread"
+  },
+  {
+   "name": "hacked_beyond_self_serve",
+   "hard": false,
+   "disposition": "escalate",
+   "intents": [
+    "account_security"
+   ],
+   "pattern": "\\b(changed (my|the) (email|e-mail|password)|already (tried|reset|changed|did)|(second|third|\\d+(st|nd|rd|th)) time|again|premium|paid|someone else'?s|(mom|dad|mum|son|daughter|husband|wife|friend|brother|sister)'?s account)\\b",
+   "reason": "account compromise beyond the self-serve page ({match}); needs backstage recovery in DM"
+  },
+  {
+   "name": "steps_tried_or_account_scoped",
+   "hard": false,
+   "disposition": "escalate",
+   "intents": [
+    "app_or_playback_issue",
+    "how_to_and_product_question"
+   ],
+   "pattern": "\\b(re-?install\\w*|uninstall\\w*|logg?(ed|ing) out and|log(ged)? out.{0,30}(back )?in|restart(ed|ing)? (my |the )?(phone|device|computer|laptop|pc|mac)|tried everything|every device|all (my |of my )?devices|any device|playlists? (are |is |have |has |got )?(all )?(gone|disappeared|deleted|vanished|missing|wiped)|(library|liked songs|saved songs|saved music) (is |are |has |have )?(all )?(gone|disappeared|deleted|missing)|(second|third|\\d+(st|nd|rd|th)) time|new phone|keeps? (happening|deleting|removing|disappearing)|always (deletes|removes|disappears))\\b",
+   "reason": "account-scoped symptom or self-serve steps already tried ({match}); troubleshooting ladder exhausted"
+  },
+  {
+   "name": "intent_escalate",
+   "hard": false,
+   "disposition": "escalate",
+   "intents": [
+    "billing_and_subscription",
+    "account_access_and_settings",
+    "support_followup_and_channel_request"
+   ],
+   "reason": "intent '{match}' requires an account lookup or human follow-up"
+  },
+  {
+   "name": "intent_auto",
+   "hard": false,
+   "disposition": "auto",
+   "intents": [
+    "content_availability",
+    "feature_request_and_feedback",
+    "how_to_and_product_question",
+    "artist_and_creator",
+    "app_or_playback_issue",
+    "account_security",
+    "other"
+   ],
+   "reason": "intent '{match}' is self-serve on first contact: public canned reply / troubleshooting rung 1 / help page"
+  }
+ ]
+}

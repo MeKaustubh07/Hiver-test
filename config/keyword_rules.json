@@ -1,0 +1,42 @@
+{
+ "note": "Ordered regex rules for the keyword baseline; first match wins.",
+ "fallback": "other",
+ "rules": [
+  {
+   "intent": "account_security",
+   "pattern": "\\b(hack(ed|er|ing)?|hijack\\w*|compromised|someone (else )?(is |has been |was )?(using|logged|playing|on my)|used somewhere else|not my (music|playlists?|songs)|unknown (device|location)|phish\\w*)\\b"
+  },
+  {
+   "intent": "artist_and_creator",
+   "pattern": "\\b(my (song|single|album|release|track|music|ep|podcast|artist (page|profile)|verified)|our (podcast|release|band|single|album)|distributor|distrokid|cd ?baby|tunecore|aggregat\\w*|royalt\\w*|spotify for artists|stream ?counts?|artist support|partnership application)\\b"
+  },
+  {
+   "intent": "support_followup_and_channel_request",
+   "pattern": "\\b(no ?one (is |has )?(respond\\w*|answer\\w*|repl\\w*)|still waiting|been waiting|(sent|send) (you |u )?(a |an |several |\\d+ )?(dm|dms|email|emails|message|messages)|check (your|ur|the) dms?|answer (my|the|ur|your) dms?|dm me|(phone|telephone) (number|support)|call (you|someone)|(speak|talk) (to|with) (a |someone|somebody|human|person)|contact me|customer service)\\b"
+  },
+  {
+   "intent": "billing_and_subscription",
+   "pattern": "\\b(charg\\w*|refund\\w*|money|bill\\w*|payment|paid|pay(ing)?|still (says |on )?(a )?free|family (plan|premium|invite|account)|student (discount|plan|verif\\w*|price)|hulu|trial|subscri\\w*|cancel\\w*|price|invoice|receipt|card|\\$|\u00a3|\u20ac|premium (is(n'?t)?|not|won'?t|doesn'?t|stopped))\\b"
+  },
+  {
+   "intent": "account_access_and_settings",
+   "pattern": "\\b(log ?in|login|logging in|sign ?in|signing in|sign ?up|password|reset|locked|account (is |was |got )?(deleted|gone|locked|disabled|banned)|can'?t (get|access) (into|to|my account)|change (my )?(email|country|username|region)|facebook (login|account|error)|unsubscribe|email address|username|deactivat\\w*|delete my account)\\b"
+  },
+  {
+   "intent": "content_availability",
+   "pattern": "\\b(not (available|on spotify|in my country)|available in|(add|when (is|are|will|does|do)).{0,40}(album|song|track|artist|ep|podcast|single)|(removed|missing|greyed?|grayed?|gone) (from spotify|out)|come to (india|my country)|launch in|in my (country|region)|licens\\w*|why (isn'?t|is|are) .{0,40}(album|song|artist|podcast)|(reputation|taylor))\\b"
+  },
+  {
+   "intent": "app_or_playback_issue",
+   "pattern": "\\b(crash\\w*|freez\\w*|skip\\w*|stutter\\w*|buffer\\w*|won'?t (play|open|load|work|connect|download)|not (playing|working|loading|opening|responding)|isn'?t working|error|bug|glitch\\w*|download\\w*|offline|update\\w*|android|iphone|ios|ipad|desktop|windows|mac|app (is|keeps|won'?t|has|just)|is spotify down|down\\?|broken|shuffle (is|isn'?t|doesn'?t|keeps)|queue|connect|sonos|alexa|echo|car ?play|android auto|bluetooth|chromecast|playstation|ps4|xbox|web ?player|sound|volume|paus\\w*|stop(s|ped|ping)|lag\\w*)\\b"
+  },
+  {
+   "intent": "how_to_and_product_question",
+   "pattern": "\\b(how (do|can|to|would) (i|you|we|u)|how do (you|i)|is (there|it possible)|can (i|you|we|u) |what (is|does|are|happens)|where (is|do|can|are)|does spotify|do you (have|offer|know)|any way to|possible to|allowed to|what'?s the (difference|limit)|how much|how many)\\b"
+  },
+  {
+   "intent": "feature_request_and_feedback",
+   "pattern": "\\b((should|need to|needs to|please|pls|plz|ought to) (add|have|make|let|fix|bring|allow|give)|feature|would be (nice|great|cool|awesome|amazing)|why (don'?t|can'?t|isn'?t there|is there no|no)|bring back|option to|suggestion|wish|idea|discover weekly|daily mix|release radar|shuffle|ads?|advert\\w*|annoying|hate|sucks?|terrible|worst|ridiculous|love|awesome|great job|thank)\\b"
+  }
+ ]
+}
