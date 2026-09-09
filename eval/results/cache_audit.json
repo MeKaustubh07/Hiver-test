@@ -1,0 +1,208 @@
+{
+ "|qwen3:4b": {
+  "records": 2,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ },
+ "classify|claude-haiku-4-5-20251001": {
+  "records": 260,
+  "answers_shared_across_different_messages": 22,
+  "distinct_shared_texts": 7,
+  "stock_rationales(>=3 uses)": {
+   "Customer expressing satisfaction with service": 3,
+   "Unable to determine intent": 3,
+   "Issue related to billing or subscription management": 3,
+   "Content access or availability problem reported": 5,
+   "Account access or security concern raised": 4
+  },
+  "boilerplate_replies": 0,
+  "sample_shared": [
+   [
+    "{\"intent\": \"content_availability\", \"confidence\": 0.93, \"rationale\": \"Content access or ava",
+    5
+   ],
+   [
+    "{\"intent\": \"account_access_and_settings\", \"confidence\": 0.9, \"rationale\": \"Account access ",
+    4
+   ],
+   [
+    "{\"intent\": \"other\", \"confidence\": 0.95, \"rationale\": \"Customer expressing satisfaction wit",
+    3
+   ],
+   [
+    "{\"intent\": \"other\", \"confidence\": 0.5, \"rationale\": \"Unable to determine intent\"}",
+    3
+   ],
+   [
+    "{\"intent\": \"billing_and_subscription\", \"confidence\": 0.92, \"rationale\": \"Issue related to ",
+    3
+   ]
+  ]
+ },
+ "classify|qwen3:1.7b": {
+  "records": 258,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ },
+ "classify|qwen3:4b": {
+  "records": 2,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ },
+ "draft|claude-haiku-4-5-20251001": {
+  "records": 513,
+  "answers_shared_across_different_messages": 241,
+  "distinct_shared_texts": 63,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 22,
+  "sample_shared": [
+   [
+    "{\"reply\": \"Hey there! Can you give us more info about what's happening? We'll see what we ",
+    9
+   ],
+   [
+    "{\"reply\": \"Hey, help's here! Can you DM us your account's email address or username? We'll",
+    9
+   ],
+   [
+    "{\"reply\": \"Hey there, help's here! Can you DM us your account's email address? We'll take ",
+    8
+   ],
+   [
+    "{\"reply\": \"Hi there! Can you DM us your account's email address or username? We'll take a ",
+    8
+   ],
+   [
+    "{\"reply\": \"Hey! Can you DM us your account's email address or username? We'll take a look ",
+    8
+   ]
+  ]
+ },
+ "draft|qwen3:1.7b": {
+  "records": 260,
+  "answers_shared_across_different_messages": 2,
+  "distinct_shared_texts": 1,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 2,
+  "sample_shared": [
+   [
+    "{\n  \"reply\": \"Hey there! We've just sent a DM your way. Let's carry on chatting there 🎧\",\n",
+    2
+   ]
+  ]
+ },
+ "draft|qwen3:4b": {
+  "records": 1,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ },
+ "judge|claude-sonnet-5": {
+  "records": 1474,
+  "answers_shared_across_different_messages": 2,
+  "distinct_shared_texts": 1,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": [
+   [
+    "{\"grounded\": 3, \"helpful\": 3, \"tone\": 4, \"safe\": 4, \"overall\": 3, \"pass\": false, \"unsuppor",
+    2
+   ]
+  ]
+ },
+ "test|qwen3:1.7b": {
+  "records": 3,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ },
+ "triage|claude-haiku-4-5-20251001": {
+  "records": 237,
+  "answers_shared_across_different_messages": 19,
+  "distinct_shared_texts": 7,
+  "stock_rationales(>=3 uses)": {
+   "Routable by underlying issue.": 3,
+   "Public answer available for content availability.": 3,
+   "Public answer available for feature request and feedback.": 5
+  },
+  "boilerplate_replies": 0,
+  "sample_shared": [
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"Public answer available for feature request and feedback\"",
+    5
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"Routable by underlying issue\", \"reason\": \"Routable by und",
+    3
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"Public answer available for content availability\", \"reaso",
+    3
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"Public answer available for how to and product question\",",
+    2
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"Individual app issue on first contact\", \"reason\": \"Indivi",
+    2
+   ]
+  ]
+ },
+ "triage|qwen3:1.7b": {
+  "records": 238,
+  "answers_shared_across_different_messages": 29,
+  "distinct_shared_texts": 7,
+  "stock_rationales(>=3 uses)": {
+   "Artist/label/podcaster who already contacted Artist Support or is chasing, or a royalty/report/partnership/rights matter -> escalate. First contact about profile access, duplicate page, stream counts, pitching or podcast submission -> auto (redirect to Artist Support / Spotify for Artists).": 4,
+   "Vague plea with account/premium/subscription/DM/phone keyword, but no specific symptom or request.": 4,
+   "Billing question with a fixed public answer and no failed attempt": 5,
+   "Vague message with an account/premium/subscription/DM/phone keyword": 11,
+   "Billing and subscription question with a fixed public answer and NO failed attempt, error or charge": 3
+  },
+  "boilerplate_replies": 0,
+  "sample_shared": [
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"support_followup_and_channel_request\", \"reason\": \"Vague m",
+    11
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"billing_and_subscription\", \"reason\": \"Billing question wi",
+    5
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"artist_and_creator\", \"reason\": \"Artist/label/podcaster wh",
+    4
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"billing_and_subscription\", \"reason\": \"Billing and subscri",
+    3
+   ],
+   [
+    "{\"disposition\": \"auto\", \"rule\": \"feature_request_and_feedback\", \"reason\": \"Vague plea with",
+    2
+   ]
+  ]
+ },
+ "triage|qwen3:4b": {
+  "records": 2,
+  "answers_shared_across_different_messages": 0,
+  "distinct_shared_texts": 0,
+  "stock_rationales(>=3 uses)": {},
+  "boilerplate_replies": 0,
+  "sample_shared": []
+ }
+}

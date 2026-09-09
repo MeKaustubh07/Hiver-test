@@ -106,3 +106,16 @@ Non-obvious decisions, in the order they were made. Each one: what, why, what it
     the 60 blind replies with the judge's rubric, giving a *judge-vs-AI-reviewer* agreement (weighted
     kappa 0.58, pass kappa 0.40) that is reported under that name and is not evidence of human agreement.
     The `agreement` command refuses to treat AI-tagged ratings as human ones.
+24. **The first batch-harness run was contaminated, and every agent-stage answer was thrown away and
+    redone.** The failure-analysis pass (five analysts, a synthesizer, five skeptics) found that some of
+    the subagents answering 20-prompt batches had shortcut the work: stock rationales with fixed
+    confidences on one whole classify batch (10 of its 20 labels wrong), template triage reasons on the
+    first triage batch, 21 content-free boilerplate replies (none in the earlier v1 run), and replies
+    grounded in a *neighbouring* prompt's evidence. Four of the seven unsafe auto-handles traced to such
+    records. `scripts/audit_cache.py` quantified it (classify 22/260 answers shared across different
+    messages, triage 19/237, 22 boilerplate drafts; the Sonnet judge was clean at 2/1,474). All 1,010
+    Haiku classify/triage/draft records were deleted and re-answered in batches of five under a protocol
+    where each answer must carry the first eight words of its own customer message; ingestion
+    (`queue_batches.py ingest-guarded`) rejects mismatches, duplicated answers across different messages
+    and boilerplate, and rejected prompts are re-queued. The pre-purge numbers are kept in git history
+    and quoted in the report as the "contaminated run" so the reader can see what the audit caught.

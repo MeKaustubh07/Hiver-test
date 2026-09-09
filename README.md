@@ -64,8 +64,17 @@ No Anthropic API key was available on the machine this was built on. The pipelin
 out-of-band by Claude models (Haiku 4.5 for the agent's classify / triage / draft steps, Sonnet 5 as the
 judge) through Claude Code subagents, and the answers were ingested into the same cache the API backend
 writes to. Cache records carry `backend: "claude-code-batch"` so this is visible per call. The prompts,
-parsing and post-processing are identical to the API path; only the transport differs. A small local model
-(`qwen3:1.7b` via Ollama) was also run over the whole golden set as a fully-offline comparison row.
+parsing and post-processing are identical to the API path; only the transport differs.
+
+**This transport is not equivalent to an API call, and the first run proved it.** A failure-analysis pass
+found that some subagents answering 20-prompt batches had produced stock rationales, reused answers and
+replies grounded in a neighbouring prompt's evidence (`scripts/audit_cache.py`, decision log #24). Every
+Haiku agent-stage answer was discarded and regenerated in batches of five under a protocol where each
+answer must quote the first eight words of its own customer message; ingestion verifies that against the
+prompt and rejects mismatches, duplicated answers and boilerplate. The judge answers passed the same
+audit (2 shared answers in 1,474). A live API re-run with a key remains the cleaner path and will not
+reproduce these numbers exactly. A small local model (`qwen3:1.7b` via Ollama) was also run over the whole
+golden set as a fully-offline comparison row.
 
 ## Repository layout
 
