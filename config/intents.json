@@ -1,0 +1,314 @@
+{
+ "brand": "SpotifyCares",
+ "intents": [
+  {
+   "name": "content_availability",
+   "definition": "A specific song, album, artist, podcast or version is missing, removed, not yet released, region-locked, unplayable on every client, or has wrong metadata; or Spotify is not launched in the customer's country.",
+   "includes": "'add X', 'where is X', 'why was X removed', 'when is X coming', 'X not available in my country'; a named title greyed out on ALL clients; wrong artist page/credits reported by a listener; fan petitions and new-release waiting; 'when will Spotify come to India'.",
+   "excludes": "Customer's OWN library/downloads vanished, or everything greyed out on one device -> app_or_playback_issue. 'my song/my release' -> artist_and_creator. Existing account blocked abroad/VPN -> account_access_and_settings. Opinions about editorial playlists -> feature_request_and_feedback.",
+   "examples": [
+    "add teen, age by svt please",
+    "why aren't the Jonas Brother's available in my country? pls im really concerned thanks",
+    "I can't listen to any Daft Punk song on either spotify web, android app or desktop, any solution?",
+    "the names of the artist and release have been mixed up for years. Is it possible to correct them?",
+    "when are we going to enjoy Spotify 🇮🇳? #stillnotinourcountry"
+   ],
+   "typical_resolution": "Hey there! Fingers crossed we'll be able to have it soon, but there's info about Spotify content here: https://support.spotify.com/in-en/article/missing-music-or-podcasts",
+   "default_disposition": "auto"
+  },
+  {
+   "name": "billing_and_subscription",
+   "definition": "Money has moved or the paid-plan state is wrong or must be changed: unexpected/duplicate charges, refunds, paid-but-still-Free, ads on a stated Premium account, promo/trial charged wrongly, payment failing at checkout, cancelling to stop payments, and Family/Student/Hulu/partner plan membership FAILURES.",
+   "includes": "Charged twice; charged after cancelling; 'says I only have a free account'; Premium on the wrong login; card declined at checkout; errors on the payment page while logged in; change billing date; cancel to stop payments; Family invite errors; student discount expired on a live subscription; Hulu bundle not working; merging two paid accounts.",
+   "excludes": "Cannot log in at all (even to cancel) -> account_access_and_settings. Plan/policy questions with a fixed public answer and no failed attempt or charge ('how much is yearly', 'can two people share Premium', 'how do I verify as a student') -> how_to_and_product_question. Ads with no Premium/paid wording -> feature_request_and_feedback.",
+   "examples": [
+    "second month in a row I've been charged for premium but my account is still \"free\"",
+    "why'd I get charged twice this month, once for normal 10 second for 15",
+    "it couldn't confirm I was a college student so I couldn't get premium, but I was still charged the $5.29 and I want my money back",
+    "Hey, I can not join to a premium for family plan, every time I try to accept an invitation, i got an error. Could somebody please help?",
+    "im trying to update my payment info for my premium subscription but it keeps saying my CSRF token is invalid. Can you help at all?"
+   ],
+   "typical_resolution": "Hey there, help's here! Could you DM us your account's email address and username? We'll take a look backstage.",
+   "default_disposition": "escalate"
+  },
+  {
+   "name": "account_access_and_settings",
+   "definition": "The customer cannot get into, create or identify their own account on any client, or needs a backstage change to account identity or settings (email, country, username, Facebook link, merge, marketing opt-out), with no sign of a third party.",
+   "includes": "'can't log in' with no working device mentioned; 'too many redirects'/token errors on the LOGIN page; Facebook auth errors; password reset email never arrives; forgot email/username; sign-up stuck; account locked or 'deleted itself'; change account email/country; unsubscribe from marketing emails; location enforcement on an existing account (abroad, 14-day limit, VPN).",
+   "excludes": "Someone else using the account or attacker changed the email -> account_security. Logged in but Premium not recognised or payment-page error -> billing_and_subscription. Login fails on ONE device while others work, 'you're offline' at login -> app_or_playback_issue.",
+   "examples": [
+    "can't login! Too many redirects error message",
+    "i lost access to the email account linked to my account. how do i update it if i cannot log in or get a password reset?",
+    "I have problem creating account... On Sign up screen after entering all my info, the loading circle is just spinning, spinning",
+    "I've moved from the UK to Canada and it won't let me change the country I'm in - and I need to change my payment card!?",
+    "Your unsubscribe button for marketing emails does not seem to remove me from the list. Please remove me."
+   ],
+   "typical_resolution": "Hey there, help's here! Can you DM us your account's email address or username, along with a screenshot of any error message? We'll take a look backstage.",
+   "default_disposition": "escalate"
+  },
+  {
+   "name": "account_security",
+   "definition": "The customer believes an unknown third party has or is using their account, an attacker changed their details, or they are checking whether a security email or breach claim is legitimate.",
+   "includes": "'I got hacked', 'hijacked', 'compromised'; unknown music in Recently Played; unknown device/location; music switching to an unknown speaker; 'paused because your account is being used somewhere else' with no known co-listener; email/password changed without consent; 'is this phishing?'; a deceased person's account.",
+   "excludes": "Plain forgotten password with no third-party sign -> account_access_and_settings. A known person (partner, family) sharing the account -> how_to_and_product_question. Unfamiliar songs only in Discover Weekly/suggestions -> feature_request_and_feedback.",
+   "examples": [
+    "I swear my Spotify got hacked by someone. Whoever did it deleted all my playlists and were listening to their own music look!",
+    "Someone is definitely using my Spotify I have no idea what this music is or why it's in my recently played",
+    "My account has been compromised and I cannot sort it as the e-mail has been changed on my account",
+    "received email asking my to follow link to change spotify password. is this real or phishing?",
+    "Hey , out of nowhere I am getting the message \"Spotify has been paused because your account has been used somewhere else.\". tbc"
+   ],
+   "typical_resolution": "Hey! We're sorry to hear that. Check out https://support.spotify.com/in-en/article/hacked-account-help for what to do next.",
+   "default_disposition": "depends"
+  },
+  {
+   "name": "app_or_playback_issue",
+   "definition": "The app or playback misbehaves on the customer's device or client: crashes, won't open, skipping, tracks won't play, downloads or library disappearing, queue/shuffle/autoplay malfunction, car/speaker/console/web-player integration failures, a device-scoped login failure, or a suspected outage.",
+   "includes": "Any symptom tied to a device, OS, browser, car, speaker, console or update; 'is Spotify down?'; ads in the wrong language; 30-minute ad-free window resetting; downloads unexpectedly removed; playlists/library gone; playback stops after every song; login fails on one device only; 'you're offline' at login.",
+   "excludes": "Cannot log in on any client -> account_access_and_settings. 'Says I need Premium' or ads on a stated Premium account -> billing_and_subscription. A NAMED title/artist greyed out -> content_availability. 'Used somewhere else' -> account_security. A deliberate removal the customer names ('no longer supported', 'bring back') -> feature_request_and_feedback.",
+   "examples": [
+    "my (android) app freezes after it plays ads and I need to restart it every time to resume playing music",
+    "having issues with app on Samsung s6. Every track skips like scratched CD? Checked w/ o apps, no issues so not hphones or fone",
+    "why has all of my music undownloaded?",
+    "is Spotify down at the moment ? Any search for anything or Home not working",
+    "My spotify playlist disappeared and It's not on the recover page."
+   ],
+   "typical_resolution": "Hey there! Help's here. Can you let us know the device, operating system, and Spotify version you're using? We'll see what we can suggest.",
+   "default_disposition": "depends"
+  },
+  {
+   "name": "feature_request_and_feedback",
+   "definition": "The customer asks Spotify to build, change, restore or prioritise a capability that does not exist, or gives an opinion about product design, deliberate changes, ads, recommendations, shuffle, curated playlists, pricing policy or the company, with nothing broken and no account action needed.",
+   "includes": "'Why don't you have X', 'bring back lyrics', named deprecations ('no longer supported'); sleep timer/alarm/block-artist/lossless/parental filter requests; platform requests (Apple Watch, Xbox); UI/default complaints; Discover Weekly/Daily Mix quality; shuffle not random; ads complaints with no paid wording; churn rants with no symptom.",
+   "excludes": "Capability exists -> how_to_and_product_question. Specific song/artist/country availability -> content_availability. Something that used to work and now fails with no deprecation wording -> app_or_playback_issue. Ads on a stated paid account -> billing_and_subscription. Praise with no ask -> other.",
+   "examples": [
+    "should have an alarm feature so I can wake up to my soundtrack every morning. Just saying.......",
+    "Bring back lyrics you monster",
+    "Why isn't there an option to block artists if you don't want them on shuffle its annoying please add an option to block",
+    "So my spotify activity to facebook mysteriously stops at the end of September...a bit of digging shows you told someone the feature is no longer supported? Maybe announce this instead of frustrating us!",
+    "Good job only took you an hour longer than your competitor LMAO fucking shitty service lost a subscriber"
+   ],
+   "typical_resolution": "Hey there! We can see how that'd be handy. Thanks for taking the time to reach out – your feedback's been noted 📝",
+   "default_disposition": "auto"
+  },
+  {
+   "name": "how_to_and_product_question",
+   "definition": "A question about how to use an existing capability, whether something is possible, what a feature or plan costs/covers, how to subscribe, or an intended-behaviour or policy explanation with a fixed public answer; no failed attempt or charge reported.",
+   "includes": "'How do I copy a URI / clear my queue / use folders / sign out everywhere / stop autoplay'; 'can I keep downloads after the trial'; 'how much is a year'; 'how do I get Premium'; 'is there an Xbox app'; privacy settings; offline-device limit; 'how do I verify as a student'; 'can two people share Premium'; 'can I transfer Family ownership'; NUS vs UNiDAYS; regional promo eligibility.",
+   "excludes": "Capability does not exist -> feature_request_and_feedback. Answer depends on the customer's account/charges -> billing_and_subscription or account_access_and_settings. Artist tools -> artist_and_creator. Why a song is missing -> content_availability.",
+   "examples": [
+    "How do you copy URI on ?",
+    "Does anyone know how to clear my queue on the iPhone App? I've clicked around this thing for an hour.",
+    "if u get a spotify trial and download ur music can u listen to it without the trial ??",
+    "Yo is it possible to transfer \"billing responsibility\" on a family account to another member of that family account?",
+    "why can't I use my NUS student discount card to get Spotify Premium anymore?"
+   ],
+   "typical_resolution": "Hey there! Help's here. You'll find step-by-step info for this on our support site, and if anything's unclear just give us a shout – we'll see what we can suggest.",
+   "default_disposition": "auto"
+  },
+  {
+   "name": "support_followup_and_channel_request",
+   "definition": "The message is about the support interaction itself rather than a describable product problem: chasing an existing DM/email/ticket, asking to be contacted, asking for a phone number or other channel, or a bare 'account/premium issue' with no symptom.",
+   "includes": "'Sent you a DM', 'check my DMs', 'I emailed three times, no response', 'still waiting since yesterday', 'please contact me', 'is there a phone number', 'having issues with my premium/account' with no symptom, 'worst customer service' about waiting; tweets containing the customer's email or account details.",
+   "excludes": "Any message that names a symptom, charge, login failure, hack or content title -> that intent, even with a channel ask attached. Artist senders chasing Artist Support -> artist_and_creator. Anger about the product with no support-process complaint -> feature_request_and_feedback.",
+   "examples": [
+    "Hi! Sent you a DM.",
+    "hello can someome answer my dms im gonna lose my premium",
+    "Is there a phone number I can call someone at",
+    "having a lot of problems with Spotify premium. Is someone able to assist please?",
+    "I've sent you like three emails through the support forum thing but no one will respond. Please help"
+   ],
+   "typical_resolution": "Hi there! Help's here. We don't have telephone support, but you can reach us via DM or at https://support.spotify.com/in-en/contact-spotify-anonymous – just let us know what's happening and we'll see what we can suggest.",
+   "default_disposition": "escalate"
+  },
+  {
+   "name": "artist_and_creator",
+   "definition": "The sender is acting as an artist, label, podcaster or business partner about their own content, profile, stats, reports, submissions or applications ('my release', 'my song', 'our podcast', 'my verified page').",
+   "includes": "Release attached to the wrong/duplicate artist page for the sender's own act; Spotify for Artists access; verified profile; stream counts/reports to their aggregator; royalties/payouts; pitching their own release; podcast submission; partnership applications; chasing Artist Support.",
+   "excludes": "A listener reporting wrong data on someone else's artist page -> content_availability. Listener curation asks -> feature_request_and_feedback. Careers/job applications -> other.",
+   "examples": [
+    "had a release today that came out on Spotify and made a new artist page instead of attaching to my verified page! help pls <3",
+    "I have an artist issue. DM me plz &amp; thnx :(",
+    "Can you please reply to the corporate partnership application for Vybuds filed 6 days ago? Thanks",
+    "Hey still waiting since yesterday having the problem with my single \"LOST\" sorted out and in the right profile.",
+    "Mystreamcount arenot updated for my song to my aggregater as they are saying spotify has not given them report"
+   ],
+   "typical_resolution": "Hey! Our friends in Artist Support are the right folks to help with this. You can get in touch with them here: https://support.spotify.com/in-en/artists",
+   "default_disposition": "auto"
+  },
+  {
+   "name": "other",
+   "definition": "Catch-all: (a) praise/thanks/banter/shared links with nothing to fix; (b) vague pleas, image-only or fragment tweets with no diagnosable words; (c) off-topic asks with a fixed answer (careers, presale codes, follows, recommendations); (d) human-only requests (data export/GDPR, account deletion, bereavement, legal/press).",
+   "includes": "'saved the day! Thank you!', 'never mind I fixed it', 'who has cool playlists?', 'I need help'/'SOS' with no device or symptom, 'here are some errors <pic>', '2/2 ...' fragments, 'do you have job openings', 'why didn't I get a presale code', 'I need all the data you have about me', 'delete my account'.",
+   "excludes": "Anything with even one concrete symptom, device, charge, login, hack, content title, feature wish or artist matter -> that intent. Vague message containing 'account', 'premium', 'subscription', 'plan', 'login', 'DM' or 'phone' -> support_followup_and_channel_request. 'How do I subscribe' -> how_to_and_product_question.",
+   "examples": [
+    "saved the day! ❤️ Thank you!",
+    "Necesito ayuda / I need help",
+    "here are some errors https://t.co/B6IRHjDe9l",
+    "So frustrated! Can't find my presale code for the concert in NYC !! SOS",
+    "Hey ! I need a document with all the datas you have about me, is that possible ? ☺️ Thanks !"
+   ],
+   "typical_resolution": "Hey there! We'd love to help out. Can you tell us what's happening exactly?",
+   "default_disposition": "depends"
+  }
+ ],
+ "escalation_rules": [
+  {
+   "rule": "Customer posted their own email, phone number, payment card or password publicly (a bare username alone does not count)",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Public PII in the tweet; ask them to delete it and move to DM, human handles the account"
+  },
+  {
+   "rule": "Credible self-harm, threats of violence, harassment, hate speech, or a deceased person's account (common hyperbole like 'kill me', 'throwing hands' is NOT a trigger)",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Safety-sensitive content; human judgement required"
+  },
+  {
+   "rule": "Legal threats, lawsuit/regulator mentions, press/media inquiry, or law-enforcement request",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Legal/press signal; support does not answer these publicly"
+  },
+  {
+   "rule": "Data-privacy/GDPR request, export or delete personal data, or close/delete the account (in-app privacy settings questions are how_to, auto)",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Data or deletion request needs identity verification and a human process"
+  },
+  {
+   "rule": "Claim that Spotify itself was breached, or a phishing check that needs the email inspected",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Security incident/phishing verification; never speculate publicly"
+  },
+  {
+   "rule": "Customer chases an existing DM/email/ticket, asks to be contacted or DM'd, asks for a phone number or other channel, or gives a vague 'account/premium/subscription/login' complaint with no symptom",
+   "applies_to": [
+    "support_followup_and_channel_request",
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Support-process follow-up; a human must be in the DM thread and the AI never claims a DM was sent"
+  },
+  {
+   "rule": "Money has moved or the paid state is wrong: charged twice/wrongly/after cancelling, refund request, paid but still Free, ads on a STATED Premium account, checkout/payment-page error, cancelling to stop payments, Family/Student/Hulu/partner entitlement failure, Premium on the wrong login, merging paid accounts",
+   "applies_to": [
+    "billing_and_subscription",
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Billing/entitlement issue requires looking up payment history; refunds are never promised publicly"
+  },
+  {
+   "rule": "Plan/policy question with a fixed public answer and NO failed attempt, error or charge (share Premium, transfer Family ownership, switch to Yearly, how to buy Premium, NUS vs UNiDAYS, trial eligibility with no charge yet)",
+   "applies_to": [
+    "how_to_and_product_question",
+    "billing_and_subscription"
+   ],
+   "disposition": "auto",
+   "reason_template": "Plan-policy fact is public and account-independent"
+  },
+  {
+   "rule": "Cannot log in on any client, forgotten credentials, password reset fails everywhere, locked/'deleted' account, account settings change (email/country/username/marketing opt-out), or location enforcement on an existing account. Exception -> auto: login fails on ONE device only, 'you're offline' at login, dead login button or reset loop (one public self-serve step first)",
+   "applies_to": [
+    "account_access_and_settings",
+    "app_or_playback_issue"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Account access/identity issue requires verification and a lookup that cannot happen publicly"
+  },
+  {
+   "rule": "Hacked/unauthorised use where the attacker changed the email/password, self-serve steps were already tried, hijacks repeat, the account is stated Premium/paid, or it is someone else's account. Otherwise a first-contact hack on a Free/unstated account -> auto (hacked-account help page: reset password, sign out everywhere)",
+   "applies_to": [
+    "account_security"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Account compromise beyond self-serve; needs backstage recovery in DM"
+  },
+  {
+   "rule": "Account-scoped data loss or state: playlists/library/followed artists gone; downloads lost repeatedly, on a new phone or right after an unexplained logout; nothing plays on ANY device; ads or 'needs Premium' on a paid account. Also: qualifying self-serve steps already tried (log out + restart device + log in, reinstall, other network/device, incognito, 'tried everything'); restarting the app does not count",
+   "applies_to": [
+    "app_or_playback_issue",
+    "how_to_and_product_question"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Symptom implies account-level state or the troubleshooting ladder is exhausted; next step is a backstage look via DM"
+  },
+  {
+   "rule": "Individual app/playback symptom on first contact with no account-scoped signal: ask device/OS/version (skip if given) or use the matching shortcut (downloads-removed article, ad-free-timer question, incognito for web pages). Outage-shaped reports get a public holding line only if an incident is confirmed",
+   "applies_to": [
+    "app_or_playback_issue"
+   ],
+   "disposition": "auto",
+   "reason_template": "Device-level bug; public troubleshooting ladder rung 1 or the symptom shortcut"
+  },
+  {
+   "rule": "Artist/label/podcaster who already contacted Artist Support or is chasing, or a royalty/report/partnership/rights matter -> escalate. First contact about profile access, duplicate page, stream counts, pitching or podcast submission -> auto (redirect to Artist Support / Spotify for Artists)",
+   "applies_to": [
+    "artist_and_creator"
+   ],
+   "disposition": "auto",
+   "reason_template": "Artist-side question; public redirect is the historical resolution"
+  },
+  {
+   "rule": "Specific content missing/removed/wrong metadata/unplayable everywhere, country launch question, feature request or deprecation complaint, product/ads/recommendation/shuffle opinion, churn rant with no symptom, how-to or policy question with a public answer, praise/thanks, presale codes, careers",
+   "applies_to": [
+    "content_availability",
+    "feature_request_and_feedback",
+    "how_to_and_product_question",
+    "other"
+   ],
+   "disposition": "auto",
+   "reason_template": "Self-serve intent; public canned reply with at most one link, no account lookup needed"
+  },
+  {
+   "rule": "Profanity, churn threat or anger with an identifiable issue: tone alone never changes the disposition; route by the underlying issue",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "auto",
+   "reason_template": "Tone is not an escalation trigger"
+  },
+  {
+   "rule": "Vague plea, image-only tweet, promo copy or fragment with no risk keyword",
+   "applies_to": [
+    "other"
+   ],
+   "disposition": "auto",
+   "reason_template": "No diagnosable text; one public clarifying question, then re-classify"
+  },
+  {
+   "rule": "Classifier confidence below threshold, two intents tied with different dispositions, non-English text the agent cannot ground, or still unclear",
+   "applies_to": [
+    "any"
+   ],
+   "disposition": "escalate",
+   "reason_template": "Uncertain intent; never auto-handle an unsure message"
+  }
+ ],
+ "tie_breaks": [
+  "Multi-intent precedence for the primary label: account_security > account_access_and_settings > billing_and_subscription > app_or_playback_issue > content_availability > artist_and_creator > feature_request_and_feedback > how_to_and_product_question > other; support_followup only when nothing describable is present or the customer explicitly chases.",
+  "Capability exists -> how_to_and_product_question; does not exist -> feature_request_and_feedback, regardless of phrasing (folders and collaborative playlists exist; block-artist, explicit filter, lossless, ad opt-out do not).",
+  "Plan question with no error and no charge -> how_to (auto); any error message, failed invite or charge -> billing (escalate). Hulu/partner bundle mentioned -> billing.",
+  "Logged in + error on the payment page -> billing; error at login -> account_access; login fails on one device only or 'you're offline' -> app_or_playback_issue.",
+  "Named artist/title won't play on every client -> content_availability; 'from my library/downloads' with no title -> app_or_playback_issue.",
+  "Download/offline wording -> app (auto first time on one device); songs/playlists/library gone with no download wording -> app, escalate; 'second time', 'always', 'new phone' -> escalate.",
+  "'Used somewhere else' or unknown device/speaker -> account_security; known co-listener -> how_to. Unfamiliar music in Recently Played -> account_security; only in Discover Weekly -> feature_request.",
+  "'Where did X go' with no attribution -> app_or_playback_issue; customer says it was removed/deprecated/'is this permanent' -> feature_request_and_feedback.",
+  "Country not launched -> content_availability; existing account abroad/VPN/14-day -> account_access_and_settings.",
+  "'my release/song/podcast/verified page' -> artist_and_creator; listener report -> content (metadata) or feature (curation).",
+  "Vague message with an account/premium/subscription/plan/login/DM/phone keyword -> support_followup_and_channel_request; no keyword -> other; device or symptom named -> app_or_playback_issue."
+ ]
+}
