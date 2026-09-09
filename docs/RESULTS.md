@@ -49,12 +49,15 @@ Rule-veto policy, chosen after seeing the golden results: unsafe auto-handle 0.1
 
 | reply system | n | grounded | helpful | tone | safe | overall | pass rate | unsupported-claim rate | pass (gold auto) | pass (gold escalate) |
 |---|---|---|---|---|---|---|---|---|---|---|
+| grounded_llm:claude-haiku-4-5 | 256 | 4.10 | 3.66 | 4.16 | 4.66 | 3.72 | 0.67 | 0.14 | 0.57 | 0.84 |
+| nearest_reply | 256 | 3.07 | 3.41 | 4.11 | 3.91 | 3.05 | 0.40 | 0.59 | 0.43 | 0.36 |
+| template | 256 | 3.80 | 3.20 | 3.96 | 4.33 | 3.26 | 0.53 | 0.24 | 0.45 | 0.66 |
 
 ### Reply quality, LLM judge = claude-sonnet-5 (before the unusable-link fix (v1))
 
 | reply system | n | grounded | helpful | tone | safe | overall | pass rate | unsupported-claim rate | pass (gold auto) | pass (gold escalate) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| grounded_llm:claude-haiku-4-5-v1 | 242 | 4.12 | 3.60 | 4.17 | 4.64 | 3.65 | 0.67 | 0.19 | 0.60 | 0.78 |
+| grounded_llm:claude-haiku-4-5-v1 | 256 | 4.14 | 3.63 | 4.18 | 4.66 | 3.67 | 0.67 | 0.18 | 0.60 | 0.79 |
 | nearest_reply | 256 | 3.50 | 3.50 | 4.18 | 4.08 | 3.32 | 0.53 | 0.49 | 0.60 | 0.40 |
 | template | 256 | 3.88 | 3.16 | 3.95 | 4.39 | 3.29 | 0.55 | 0.21 | 0.49 | 0.64 |
 

@@ -523,4 +523,132 @@
 - evidence 791679 (DM): "Hello , i forgot my password! I need help to rescue my password. Can you help-me?" → "Hey Jader, help's here! Can you DM us your account's email address? We'll see what we can suggest /JN https://t.co/ldFdZ"
 
 
+## Grounded replies the judge failed (85)
+
+### id 1162280 — overall 1, grounded 2, helpful 1, safe 3
+- message: I'm planning to de-active my Facebook account. If I do that, can I and others still listen to Spotify playlists I created that are attached to that account?
+- reply: Hey there! That doesn't sound right. Can you let us know the device, operating system, and Spotify version you're using? We'll see what we can suggest.
+- judge: Device/OS/version ask is irrelevant to a hypothetical Facebook-deactivation/playlist question and ignores the required DM escalation. | unsupported: []
+
+### id 2818867 — overall 1, grounded 1, helpful 1, safe 3
+- message: I’d like to see my play count for both Twinkle Twinkle Little Star (the hit single) and the album “2017 White Noise for Baby Sleep” #breakingrecords #repeatONE
+- reply: Hey! For your play count stats, head to Spotify for Artists. You'll get all the details there!
+- judge: Misdirects a listener's playful feature request to Artist Support with an unsupported factual claim; doesn't match the Community Ideas Exchange resolution in evidence. | unsupported: ["Claims Spotify for Artists shows a listener's personal play-count stats, not supported by evidence or policy, and gives no citable link"]
+
+### id 2545852 — overall 1, grounded 2, helpful 1, safe 3
+- message: hi, how can I change my account from premium to premium for family?
+- reply: Hey! We appreciate you reaching out. Thanks for the feedback!
+- judge: Generic 'thanks for the feedback' non-answer ignores the customer's actual question and provides no path to resolution. | unsupported: ['mischaracterizes an account-change question as unsolicited feedback']
+
+### id 2608285 — overall 1, grounded 2, helpful 1, safe 3
+- message: Um why is Travelin' Soldier no longer on Spotify I need it to cry in the car thanks
+- reply: Hey! We appreciate you reaching out. Thanks for the feedback!
+- judge: Generic 'thanks for the feedback' non-answer ignores the customer's specific question about a missing track. | unsupported: ['mischaracterizes a missing-content complaint as unsolicited feedback']
+
+### id 2956292 — overall 1, grounded 2, helpful 1, safe 4
+- message: why do you suddenly remove some of the downloaded songs?
+- reply: Hey! You can manage your library and playlists in Your Library. Let us know if you need anything else!
+- judge: Generic Your Library tip is irrelevant to the customer's specific complaint about downloaded songs disappearing; no real help offered. | unsupported: ["'manage your library and playlists in Your Library' doesn't address why downloads are being removed"]
+
+### id 719463 — overall 1, grounded 2, helpful 1, safe 3
+- message: if primus shows up on my discover weekly one more time I’m canceling. I abhor primus. You say it’s algorithmic so fix mine.
+- reply: Hey! We appreciate you reaching out. Thanks for the feedback!
+- judge: Generic 'thanks for the feedback' non-answer fails to explain how Discover Weekly works or address the complaint. | unsupported: ['mischaracterizes a Discover Weekly complaint as unsolicited feedback']
+
+### id 1884159 — overall 1, grounded 2, helpful 1, safe 2
+- message: someone tried to use my email to sign up for spotify, got the verfy email. how do i report this? do i just do nothing?
+- reply: Hey! We appreciate you reaching out. Thanks for the feedback!
+- judge: Dismissive generic reply ignores a security concern and fails to route to DM as every evidenced precedent for this issue does. | unsupported: ['mischaracterizes an unauthorized-signup security concern as unsolicited feedback']
+
+### id 1031939 — overall 1, grounded 3, helpful 1, safe 5
+- message: y'all taking super long to approve my song, lol. Your competitors have it in their stores already and I submitted a week ago
+- reply: Hey! We appreciate you reaching out. Thanks for the feedback!
+- judge: Generic thanks-for-feedback reply ignores the customer's actual request to route to Artist Support or chase the approval, unlike evidence for this exact scenario; not actionable. | unsupported: []
+
+### id 446898 — overall 1, grounded 1, helpful 1, safe 4
+- message: What's up with the log in page?
+- reply: Hey there, help's here! Are you getting any error messages when trying to play that track?
+- judge: Completely off-topic — responds to a nonexistent track-playback issue instead of the customer's login-page question. | unsupported: ["References 'trying to play that track' — no track was mentioned; customer only asked about the login page"]
+
+### id 1149141 — overall 1, grounded 3, helpful 1, safe 5
+- message: hi just updated the new firmware update now I can’t publish posts to my Facebook account ?
+- reply: Hey there, we hear you. Keep us posted.
+- judge: Non-actionable filler — doesn't request any troubleshooting info or move the issue to DM, leaving the customer's Facebook-posting problem unaddressed. | unsupported: []
+
+### id 669987 — overall 1, grounded 1, helpful 1, safe 4
+- message: Hi so I transferred my Groove collection to Spotify yesterday. Just wondering when the 60 day trial will be enabled. Thanks!
+- reply: Hey! We're afraid you can't apply additional discounts to a student discount. This includes Premium for Family.
+- judge: Completely off-topic reply about student discounts that ignores the customer's actual Groove trial question; unhelpful and confusing. | unsupported: ["Response about student discounts/Family plan is unrelated to the customer's Groove 60-day-trial question"]
+
+### id 2125287 — overall 1, grounded 1, helpful 1, safe 5
+- message: I would really like some music added
+- reply: Glad you're loving it! Happy listening 🎶
+- judge: Completely unrelated to the request; assumes positive sentiment not present; fails to address the ask for more music at all. | unsupported: ['Assumes customer is already enjoying the service — contradicts the actual request for more music']
+
+### id 1724017 — overall 1, grounded 2, helpful 1, safe 4
+- message: please add “we made it” by drake ❤️
+- reply: Hey there! Can you DM us your account's email address or username? We'll take a look backstage
+- judge: Misapplies the account-lookup DM pattern to a content-request question; every evidence example for this issue type is handled publicly, and a DM won't resolve a missing-song request. | unsupported: []
+
+### id 2761396 — overall 1, grounded 3, helpful 1, safe 4
+- message: Still waiting for ’s #reputation to drop on 😭
+- reply: Hey there! Can you DM us your account's email address or username? We'll take a look backstage
+- judge: Irrelevant to a content-availability question; should point to the content-availability article per policy instead of requesting an unrelated account lookup. | unsupported: []
+
+### id 293890 — overall 1, grounded 1, helpful 1, safe 3
+- message: Dear , What am I doing wrong that this happens to me even though I listen to 🎶 on Spotify for hours every day? 😥#SpotifyTimeCapsule
+- reply: Hey there! At this time there's a limit of 3,333 offline songs per device due to licensing. More info here: https://support.spotify.com/in-en/article/listen-offline
+- judge: Invents a specific numeric offline-song limit not supported by evidence and addresses a topic (offline storage) the customer never raised. | unsupported: ["'a limit of 3,333 offline songs per device' is not stated anywhere in the evidence and is unrelated to this customer's #SpotifyTimeCapsule complaint"]
+
+### id 1825067 — overall 1, grounded 1, helpful 1, safe 4
+- message: It would be great that when I hit the low limit they stop removing my downloads. A warning would be much better.
+- reply: Hey there, help's here! Can you DM us your account's email address? We'll take a look backstage.
+- judge: Treats a generic feature-feedback message about downloads being removed at the limit as an account-lookup issue requiring DM+email; no evidence supports this, and the escalation is unwarranted and unhelpful. | unsupported: []
+
+### id 1442060 — overall 1, grounded 3, helpful 1, safe 4
+- message: I feel I spend too much time/money making music just for to mess up artist mapping on release day. C'mon guys...
+- reply: Help's here! What can we help you with?
+- judge: Generic 'what can we help with' ignores the customer's explicit artist-mapping complaint and fails to route it to Spotify for Artists as policy requires. | unsupported: []
+
+### id 2558882 — overall 1, grounded 3, helpful 1, safe 4
+- message: Why did make the first button the thumbs down? I've either hit it or almost hit it on so many songs I actually like. Also is there a way to undo a thumbs down?
+- reply: Help's here! What can we help you with?
+- judge: Generic 'what can we help with' fails to answer the customer's explicit question about undoing a thumbs-down, unlike every relevant evidence example. | unsupported: []
+
+### id 430237 — overall 1, grounded 2, helpful 1, safe 3
+- message: finally added the suburbs by arcade fire, thanks guys!! Next up...acid rap? #cocoabutterkisses
+- reply: Hey there, help's here! Can you DM us your account's email address? We'll take a look backstage.
+- judge: Misapplies account-lookup escalation to a content-availability wish; should point to content info instead of requesting DM and email. | unsupported: []
+
+### id 1141274 — overall 2, grounded 3, helpful 2, safe 4
+- message: hi folks I sent a DM to you. Really need your help :(
+- reply: Hi there, help's here! Can you DM us your account's email address or username? We'll take a look backstage.
+- judge: Customer already sent a DM; re-asking for account email/username via DM ignores that and doesn't confirm follow-up, unlike the matching evidenced responses. | unsupported: []
+
+### id 2144241 — overall 2, grounded 3, helpful 2, safe 4
+- message: If I am listening to , why would I want to listen to Bieber? They are 2 totally different genres. Work on your suggested songs. No offensive meant to Justin.
+- reply: Hey there! That doesn't sound right. Can you let us know the device, operating system, and Spotify version you're using? We'll see what we can suggest.
+- judge: Misdiagnoses a music-preference complaint as a technical bug by asking for device/OS/version instead of the evidenced 'add more artists' fix. | unsupported: []
+
+### id 337542 — overall 2, grounded 2, helpful 2, safe 2
+- message: my account has been accessed two nights in a row, playlists deleted and music showing that I don't listen to. I have Facebook two factor authentication on but your service bypasses that. I have used "log out of all" twice now and changed password
+- reply: Hey there! That doesn't sound right. Can you let us know your device, operating system, and Spotify version? We'll see what we can suggest.
+- judge: Customer describes a recurring hijacked account after failed self-serve fixes; policy requires escalating to DM for email/username, not generic device/OS troubleshooting. | unsupported: ['Implies device/OS troubleshooting will fix a hacked account with repeated unauthorized access after self-serve steps already failed, when policy requires DM esc']
+
+### id 2916575 — overall 2, grounded 2, helpful 3, safe 4
+- message: Something’s wrong with the app. I need my music pls :(
+- reply: Hey Steph, help's here! Can you tell us what device, operating system, and Spotify version you're using? We'll see what we can suggest
+- judge: Copies evidence verbatim including another customer's name ('Steph'), an unverified personal detail that would look like an obvious templating error if sent. | unsupported: ["Addresses the customer as 'Steph', a name from an unrelated evidence case that this customer never provided"]
+
+### id 2834994 — overall 2, grounded 4, helpful 1, safe 4
+- message: Hey why tf does only have 3 months for $9.99?? I have $3 babe give me like 1 month for like $1.99 thanks
+- reply: Hey, sorry you feel that way. No worries, your feedback is noted and passed on to the team.
+- judge: Generic 'feedback noted' response mismatched to a pricing complaint; doesn't address the discount question or escalate to DM per policy. | unsupported: []
+
+### id 1021652 — overall 2, grounded 3, helpful 2, safe 4
+- message: every time I open your app you ask me if I am a #veteran. I am. But it didn't catch. 6 times I've answered your ? This is a screenshot
+- reply: Thanks for the feedback! We've noted this and passed it on to the right folks. Give us a shout if you need anything else.
+- judge: Treats a clearly described recurring bug with screenshot as generic feedback rather than offering troubleshooting, understating the concrete issue reported. | unsupported: []
+
+
 ## Hallucinated URLs stripped by the ground check (0)
