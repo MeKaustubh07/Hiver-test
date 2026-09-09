@@ -22,8 +22,10 @@ in [`docs/RESULTS.md`](docs/RESULTS.md); what these numbers do *not* mean in the
 | reply quality, judge overall 1-5 / pass rate | canned template 3.26 / 0.53 | copy nearest historical reply 3.05 / 0.40 | **3.72 / 0.67** (unsupported-claim rate 0.14) |
 | fully local `qwen3:1.7b` | | | intent 0.53 · unsafe auto 0.09 · escalation rate 0.54 |
 
-Judge-vs-human agreement: the blind 60-reply rating sheet is in `eval/human/`; the agreement table in
-the report is filled from it (`support-agent agreement`).
+Judge-vs-human agreement: the blind 60-reply rating sheet is in `eval/human/` (unrated at the time of
+writing); the agreement table in the report fills from it (`support-agent agreement`). A separate AI
+reviewer rated the same 60 replies (`eval/ai/`): judge-vs-AI-reviewer weighted kappa 0.58 on `overall`,
+pass/fail kappa 0.40 — reported as what it is, not as human agreement.
 
 ## Reproduce in under 15 minutes
 

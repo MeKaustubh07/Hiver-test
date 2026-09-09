@@ -67,27 +67,52 @@ class Thread:
     burst_extra: list[str] = field(default_factory=list)  # customer's follow-up tweets posted before the brand replied
 
     @property
-    def burst_turns(self) -> list[Turn]:
-        """Leading consecutive turns by the customer who opened the thread, before the brand's first reply."""
-        out = []
-        for t in self.turns:
-            if not t.inbound or t.author_id != self.turns[0].author_id:
+    def first_brand_index(self) -> int | None:
+        return next((i for i, t in enumerate(self.turns) if t.author_id == self.brand), None)
+
+    @property
+    def customer_turns(self) -> list[Turn]:
+        """The customer is whoever the brand first replied to. Their consecutive inbound turns immediately
+        before the brand's first reply form the message the agent must answer. Earlier turns by someone
+        else (e.g. a promotional tweet from another Spotify account that the customer replied to) are
+        context, not the message: 1.7% of SpotifyCares threads have that shape."""
+        bi = self.first_brand_index
+        if bi is None or bi == 0:
+            return [t for t in self.turns[:1] if t.inbound]
+        who = self.turns[bi - 1].author_id
+        out: list[Turn] = []
+        for t in reversed(self.turns[:bi]):
+            if not t.inbound or t.author_id != who:
                 break
             out.append(t)
-        return out
+        return list(reversed(out))
+
+    @property
+    def burst_turns(self) -> list[Turn]:  # backwards-compatible name
+        return self.customer_turns
+
+    @property
+    def context_before(self) -> list[Turn]:
+        """Turns before the customer's own (e.g. the promo tweet they replied to); empty for normal threads."""
+        ct = self.customer_turns
+        if not ct:
+            return []
+        first = self.turns.index(ct[0])
+        return self.turns[:first]
 
     @property
     def customer_message(self) -> str:
-        """The 'burst': the customer's consecutive tweets before the brand replied, joined in order."""
-        texts = [t.text for t in self.burst_turns[:4]] + self.burst_extra
+        """The customer's consecutive tweets before the brand replied, joined in order."""
+        ct = self.customer_turns
+        texts = [t.text for t in ct[:4]]
+        if ct and ct[0].author_id == self.turns[0].author_id:
+            texts += self.burst_extra  # sibling self-replies to the root, when the customer opened the thread
         return " ".join(texts)
 
     @property
     def first_brand_reply(self) -> str | None:
-        for t in self.turns[len(self.burst_turns):]:
-            if not t.inbound:
-                return t.text
-        return None
+        bi = self.first_brand_index
+        return self.turns[bi].text if bi is not None else None
 
     def transcript(self, max_turns: int | None = None, keep_urls: bool = True) -> str:
         turns = self.turns if max_turns is None else self.turns[:max_turns]

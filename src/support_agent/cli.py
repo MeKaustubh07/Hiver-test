@@ -151,31 +151,79 @@ def make_rating_sheet(tag: str, judge_tag: str, n: int = 60, seed: int = 0):
 
 
 @app.command()
-def agreement(tag: str, judge_tag: str, ratings: Path = None):
-    """Judge-vs-human agreement on the rated subset -> eval/results/agreement_<tag>.json"""
+def agreement(tag: str, judge_tag: str, ratings: Path = None, reviewer_kind: str = "human"):
+    """Compare the judge with human (default) or explicitly identified AI ratings."""
     import pandas as pd
     from .evaluate import save
     from .metrics import agreement as _agree, interpret_kappa
+    reviewer_kind = reviewer_kind.strip().lower()
+    if reviewer_kind not in {"human", "ai"}:
+        raise typer.BadParameter("reviewer-kind must be human or ai")
     ratings = ratings or Path(f"eval/human/ratings_{tag}.csv")
-    key = pd.read_csv(f"eval/human/ratings_{tag}_key.csv")
-    h = pd.read_csv(ratings).merge(key, on=["rating_id", "example_id"])
-    h = h[h.overall.notna() & (h.overall.astype(str).str.strip() != "")]
+    raw = pd.read_csv(ratings)
+    required = {"rating_id", "example_id", "overall", "pass"}
+    if not required.issubset(raw.columns):
+        raise typer.BadParameter(f"ratings missing columns: {sorted(required - set(raw.columns))}")
+    h = raw[raw.overall.notna() & (raw.overall.astype(str).str.strip() != "")].copy()
     if h.empty:
-        rprint("[yellow]no human ratings filled in yet — fill eval/human/ratings_<tag>.csv (see eval/human/README.md) and re-run[/yellow]")
-        return
+        if reviewer_kind == "human":  # expected state until a person fills the sheet; must not break `make reproduce`
+            rprint("[yellow]no human ratings filled in yet — fill eval/human/ratings_<tag>.csv (see eval/human/README.md) and re-run[/yellow]")
+            return
+        rprint(f"[red]no {reviewer_kind} ratings filled in yet[/red]"); raise typer.Exit(1)
+    if "reviewer_type" in h.columns:
+        kinds = h["reviewer_type"].fillna("").astype(str).str.strip().str.lower()
+        if not kinds.eq(reviewer_kind).all():
+            raise typer.BadParameter("reviewer_type must match reviewer-kind on every rated row; use --reviewer-kind ai for AI ratings")
+    if h[["rating_id", "example_id"]].isna().any().any() or h["rating_id"].astype(str).str.strip().eq("").any():
+        raise typer.BadParameter("every rated row requires rating_id and example_id")
+    if h["rating_id"].duplicated().any():
+        raise typer.BadParameter("ratings contain duplicate rating_id values")
+    example_ids = pd.to_numeric(h["example_id"], errors="coerce")
+    if (example_ids.isna() | example_ids.mod(1).ne(0)).any():
+        raise typer.BadParameter("example_id must be an integer on every rated row")
+    h["example_id"] = example_ids.astype("int64")
+    criteria = ("grounded", "helpful", "tone", "safe")
+    for c in ("overall", *criteria):
+        if c not in h.columns:
+            continue
+        filled = h[c].notna() & h[c].astype(str).str.strip().ne("")
+        scores = pd.to_numeric(h.loc[filled, c], errors="coerce")
+        if (scores.isna() | ~scores.between(1, 5) | scores.mod(1).ne(0)).any():
+            raise typer.BadParameter(f"{c} ratings must be whole numbers from 1 to 5")
+    pass_values = h["pass"].fillna("").astype(str).str.strip().str.lower()
+    valid_pass = {"true", "1", "1.0", "yes", "y", "false", "0", "0.0", "no", "n"}
+    if not pass_values.isin(valid_pass).all():
+        raise typer.BadParameter("pass must be true or false on every rated row")
+    h["pass"] = pass_values.isin({"true", "1", "1.0", "yes", "y"})
+    key = pd.read_csv(f"eval/human/ratings_{tag}_key.csv")
+    if not {"rating_id", "example_id", "system"}.issubset(key.columns):
+        raise typer.BadParameter("rating key requires rating_id, example_id, and system")
+    if key["rating_id"].duplicated().any():
+        raise typer.BadParameter("rating key contains duplicate rating_id values")
+    h = h.merge(key, on=["rating_id", "example_id"], how="left", validate="one_to_one", indicator=True)
+    if h["_merge"].ne("both").any() or h["system"].isna().any():
+        raise typer.BadParameter("every rated row must have a matching rating key")
     d = json.loads(Path(f"eval/results/judged_{tag}_by_{judge_tag}.json").read_text())
     jmap = {(r["example_id"], r["system"]): r["judge"] for r in d["rows"] if r["judge"]}
-    human, judge = [], []
-    for r in h.itertuples():
-        j = jmap.get((int(r.example_id), r.system))
+    reviewer, judge = [], []
+    for r in h.to_dict(orient="records"):
+        j = jmap.get((int(r["example_id"]), r["system"]))
         if j is None:
-            continue
-        human.append({"overall": int(float(r.overall)), "pass": str(r.__getattribute__("pass")).strip().lower() in {"true", "1", "yes", "y"},
-                      **{c: int(float(getattr(r, c))) for c in ("grounded", "helpful", "tone", "safe") if str(getattr(r, c)).strip() not in {"", "nan"}}})
-        judge.append({"overall": j["overall"], "pass": j["passed"], "grounded": j["grounded"], "helpful": j["helpful"], "tone": j["tone"], "safe": j["safe"]})
-    res = _agree(human, judge)
+            raise typer.BadParameter(f"no completed judge score for rating {r['rating_id']}")
+        reviewer.append({"overall": int(float(r["overall"])), "pass": bool(r["pass"]),
+                         **{c: int(float(r[c])) for c in criteria if c in r and pd.notna(r[c]) and str(r[c]).strip() != ""}})
+        judge.append({"overall": j["overall"], "pass": j["passed"], **{c: j[c] for c in criteria}})
+    res = _agree(reviewer, judge)
     res["kappa_interpretation"] = interpret_kappa(res.get("overall_weighted_kappa"))
-    save(f"agreement_{tag}_by_{judge_tag}", res)
+    res["comparison_type"] = f"judge_vs_{reviewer_kind}"
+    prefix = "agreement"
+    if reviewer_kind == "ai":
+        prefix = "agreement_ai"
+        if "mean_human_overall" in res:
+            res["mean_reviewer_overall"] = res.pop("mean_human_overall")
+        if "human_pass_rate" in res:
+            res["reviewer_pass_rate"] = res.pop("human_pass_rate")
+    save(f"{prefix}_{tag}_by_{judge_tag}", res)
     rprint(json.dumps(res, indent=1))
 
 

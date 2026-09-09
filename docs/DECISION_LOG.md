@@ -92,3 +92,17 @@ Non-obvious decisions, in the order they were made. Each one: what, why, what it
 21. **Human ratings are the user's job, not mine.** The rating sheet is blind and shuffled with the
     key file separate, and the agreement command refuses to run on an empty sheet. Filling it with
     model-generated "human" ratings would make the judge-validation number meaningless.
+22. **The customer is whoever the brand replied to, not the thread root.** An external review of the
+    golden labels found three candidates whose "customer message" was a promotional tweet from another
+    Spotify account (the marketing and Spotify-for-Artists handles, anonymised as numeric ids); the real
+    customer had replied to the promo and the brand answered *them*. 491 threads (1.7%) have that shape.
+    Reconstruction now takes the consecutive turns by the author the brand first replied to as the message
+    and keeps earlier turns as context. Sibling conversations under the same promo (other customers who
+    replied to it) are still dropped — one thread per root. The corpus, embeddings, the three candidates'
+    text and labels, and every downstream number were regenerated after the fix.
+23. **The golden set was reviewed once more by an AI pass, and that is stated, not hidden.** A separate
+    review went through all 107 queued rows and changed 10 labels (5 intents, 7 dispositions), each
+    with a written rationale in `ai_review_reason`; `reviewed_by_human` stays blank. The same pass rated
+    the 60 blind replies with the judge's rubric, giving a *judge-vs-AI-reviewer* agreement (weighted
+    kappa 0.58, pass kappa 0.40) that is reported under that name and is not evidence of human agreement.
+    The `agreement` command refuses to treat AI-tagged ratings as human ones.

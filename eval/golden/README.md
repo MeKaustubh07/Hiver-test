@@ -34,9 +34,14 @@ headline accuracy should not be read as the accuracy on live traffic (see the re
    the customer message only (thread context used only to disambiguate meaning, never to copy the
    brand's historical choice). An adjudicator resolved disagreements against the guide and recorded
    why in `adjudication_note`.
-3. Annotation was LLM-assisted (Claude agents acting as independent annotators) and then reviewed by
-   hand; `reviewed_by_human` marks rows the author has personally checked. Rows where the annotators
-   disagreed are listed first in `review_queue.csv` so the human review time goes where it matters.
+3. Annotation was LLM-assisted (Claude agents acting as independent annotators). A second, separate AI
+   review pass then re-examined all 107 rows in `review_queue.csv` (every disagreement or hard flag) and
+   changed 10 labels — 5 intents, 7 dispositions — recording its reasoning in `ai_review_reason` and
+   `ai_review_flags` (`reviewed_by_ai=true`). Three further rows were re-labelled after a thread-
+   reconstruction fix (their original "message" was a promotional tweet the customer had replied to).
+   `reviewed_by_human` is still blank: a person has not yet checked these labels, and the numbers in the
+   report should be read with that in mind. Disagreements are listed first in `review_queue.csv` so the
+   human review time goes where it matters.
 
 Inter-annotator agreement before adjudication (`agreement.json`, n=260):
 

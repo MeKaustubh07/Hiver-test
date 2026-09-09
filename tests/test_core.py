@@ -34,6 +34,18 @@ def test_build_threads_follows_brand_reply_and_skips_unanswered():
     assert "Agent: sorry, DM us" in threads[0].transcript()
 
 
+def test_build_threads_customer_is_who_the_brand_replied_to():
+    df = pd.DataFrame([
+        {"tweet_id": 10, "author_id": "promo", "inbound": True, "created_at": "Sat Nov 18 18:21:18 +0000 2017", "text": "Premium is 99p for 3 months", "response_tweet_id": "11", "in_response_to_tweet_id": None},
+        {"tweet_id": 11, "author_id": "cust", "inbound": True, "created_at": "Sat Dec 02 08:07:12 +0000 2017", "text": "@promo does this count for students?", "response_tweet_id": "12", "in_response_to_tweet_id": 10.0},
+        {"tweet_id": 12, "author_id": "Brand", "inbound": False, "created_at": "Sat Dec 02 09:00:00 +0000 2017", "text": "@cust yes, verify via UNiDAYS", "response_tweet_id": None, "in_response_to_tweet_id": 11.0},
+    ])
+    t = build_threads(df, "Brand")[0]
+    assert t.customer_message == "@promo does this count for students?"
+    assert [x.tweet_id for x in t.context_before] == [10]
+    assert t.first_brand_reply == "@cust yes, verify via UNiDAYS"
+
+
 # ---- llm ---------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("raw,expected", [
     ('{"a": 1}', {"a": 1}),
