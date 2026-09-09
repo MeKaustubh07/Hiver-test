@@ -1,0 +1,38 @@
+{
+ "per_stratum": {
+  "hard": {
+   "llm:claude-haiku-4-5": 0.7,
+   "tfidf_lr_cv": 0.45,
+   "keyword_rules": 0.275,
+   "n": 40,
+   "triage_acc": 0.775,
+   "unsafe_auto": 0.25,
+   "gold_esc": 0.2
+  },
+  "random": {
+   "llm:claude-haiku-4-5": 0.7876712328767124,
+   "tfidf_lr_cv": 0.5342465753424658,
+   "keyword_rules": 0.4315068493150685,
+   "n": 146,
+   "triage_acc": 0.8835616438356164,
+   "unsafe_auto": 0.045454545454545456,
+   "gold_esc": 0.3013698630136986
+  },
+  "targeted": {
+   "llm:claude-haiku-4-5": 0.8428571428571429,
+   "tfidf_lr_cv": 0.6,
+   "keyword_rules": 0.5714285714285714,
+   "n": 70,
+   "triage_acc": 0.8857142857142857,
+   "unsafe_auto": 0.06666666666666667,
+   "gold_esc": 0.6428571428571429
+  }
+ },
+ "split_half_veto": {
+  "mean_unsafe_auto_reduction_on_held_out_half": 0.09489220838544163,
+  "p5": 0.04439613526570048,
+  "p95": 0.1464711987545407,
+  "llm_only_unsafe_auto_full": 0.16494845360824742,
+  "veto_unsafe_auto_full": 0.07216494845360824
+ }
+}
