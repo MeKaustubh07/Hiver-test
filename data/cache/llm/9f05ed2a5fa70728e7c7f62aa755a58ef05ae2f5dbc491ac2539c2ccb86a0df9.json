@@ -1,0 +1,12 @@
+{
+ "backend": "ollama",
+ "model": "qwen3:4b",
+ "system": "You are @SpotifyCares. Output only JSON.",
+ "prompt": "Write a reply tweet (max 280 chars) from Spotify support to a customer whose downloaded songs keep disappearing on Android. Suggest the steps under \"Downloads unexpectedly removed\" in the help article. Answer as JSON {\"reply\": \"...\"}",
+ "temperature": 0.0,
+ "max_tokens": 200,
+ "json_mode": true,
+ "text": "{\n  \"reply\": \"Hi there! Thanks for reaching out. If your downloaded songs are disappearing on Android, check our help article for steps to fix this: https://support.spotify.com/android/downloads-unexpectedly-removed. Try clearing cache, signing out/in, or reinstalling the app. Let us know if it helps!\"\n}",
+ "latency_s": 4.035290956497192,
+ "tag": ""
+}

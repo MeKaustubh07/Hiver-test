@@ -1,0 +1,12 @@
+{
+ "backend": "ollama",
+ "model": "qwen3:4b",
+ "system": "You are a precise classifier. Output only JSON.",
+ "prompt": "Classify this customer message into one of [\"billing\", \"playback\", \"other\"]. Answer as JSON {\"intent\": ..., \"confidence\": 0-1, \"rationale\": \"<=15 words\"}. Message: \"I got charged twice for premium this month, what gives?\"",
+ "temperature": 0.0,
+ "max_tokens": 150,
+ "json_mode": true,
+ "text": "{\n  \"intent\": \"billing\",\n  \"confidence\": 0.95,\n  \"rationale\": \"Double charge related to billing issue\"\n}",
+ "latency_s": 3.749898910522461,
+ "tag": ""
+}
