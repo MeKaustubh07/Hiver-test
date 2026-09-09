@@ -252,7 +252,11 @@ def ingest_answers(answers_path: Path, backend_label: str, cache_dir: Path = CAC
     for line in answers_path.read_text().splitlines():
         if not line.strip():
             continue
-        a = json.loads(line)
+        try:
+            a = json.loads(line)
+        except json.JSONDecodeError as e:  # a malformed answer line: skip it, the prompt is simply re-queued later
+            print(f"skipping malformed answer line in {answers_path.name}: {str(e)[:80]}")
+            continue
         req = pending.get(a["key"])
         if req is None or not a.get("text"):
             continue
