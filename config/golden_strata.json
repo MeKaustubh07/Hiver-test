@@ -1,0 +1,32 @@
+{
+ "strata": [
+  {
+   "name": "account_security",
+   "pattern": "\\b(hack(ed|er)?|hijack\\w*|compromised|someone (else )?(is )?(using|logged|playing)|used somewhere else|phish\\w*)\\b"
+  },
+  {
+   "name": "artist_and_creator",
+   "pattern": "\\b(my (song|single|album|release|track|podcast|artist (page|profile))|our (podcast|release|band)|distributor|distrokid|cd ?baby|tunecore|royalt\\w*|spotify for artists)\\b"
+  },
+  {
+   "name": "support_followup",
+   "pattern": "\\b((phone|telephone) (number|support)|no ?one (is )?(respond\\w*|answer\\w*)|still waiting|(sent|send) (you )?(a )?dm|check (your|ur) dms?|answer my dms?|contact me|dm me)\\b"
+  },
+  {
+   "name": "how_to",
+   "pattern": "\\b(how (do|can) (i|you)|is it possible|is there a way|can i)\\b"
+  },
+  {
+   "name": "account_access",
+   "pattern": "\\b(log ?in|login|password|sign ?in|locked out|can'?t (get|access) (into|my account))\\b"
+  },
+  {
+   "name": "praise_or_thanks",
+   "pattern": "\\b(thank(s| you)|love (you|spotify|it)|awesome|best (app|thing)|great job|amazing)\\b"
+  },
+  {
+   "name": "billing",
+   "pattern": "\\b(charged|refund|double|money back|billed|family plan|student)\\b"
+  }
+ ]
+}
